@@ -6,12 +6,13 @@ import javafx.beans.property.SimpleStringProperty;
 
 public abstract class ProductModel implements Comparable<ProductModel> {
 	// Constants
-	public static final int NO_PRICE = 0;
+	public static final int NO_PRICE = 0, FIRST_QUEUE_NUMBER = 1;
+	private static int queueNumberGenerator = FIRST_QUEUE_NUMBER;
 
 	// Fields
-	private SimpleStringProperty name;
-	private SimpleIntegerProperty costPrice, sellingPrice;
-	//private ClientModel client;
+	private SimpleStringProperty id, name;
+	private SimpleIntegerProperty queueNumber, costPrice, sellingPrice, profit;
+	private CustomerModel customer;
 
 	// Properties (Getters and Setters)
 	public SimpleStringProperty getObservableName() {
@@ -24,8 +25,36 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 
 	private void setName(String name) {
 		if (name.isBlank())
-			UIHandler.showError("CitizenModel's name must contain at least 1 letter.");
+			UIHandler.showError("Product's name must contain at least 1 letter.");
 		this.name = new SimpleStringProperty(name);
+	}
+	
+	public SimpleStringProperty getObservableID() {
+		return id;
+	}
+
+	public String getTextualID() {
+		return id.get();
+	}
+
+	public void setID(String ID) {
+		if (ID.isBlank())
+			UIHandler.showError("Product's name must contain at least 1 letter.");
+		this.id = new SimpleStringProperty(ID);
+	}
+	
+	public SimpleIntegerProperty getObservableQueueNumber() {
+		return queueNumber;
+	}
+
+	public int getNumericQueueNumber() {
+		return queueNumber.get();
+	}
+
+	private void setQueueNumber(int QueueNumber) {
+		if (QueueNumber < FIRST_QUEUE_NUMBER)
+			UIHandler.showError("Product's queue number must be a non-negative number.");
+		this.queueNumber = new SimpleIntegerProperty(QueueNumber);
 	}
 
 	public SimpleIntegerProperty getObservableCostPrice() {
@@ -56,17 +85,39 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 		this.sellingPrice = new SimpleIntegerProperty(sellingPrice);
 	}
 	
+	public SimpleIntegerProperty getObservableProfit() {
+		return profit;
+	}
+
+	public int getNumericProfit() {
+		return profit.get();
+	}
+
+	private void setProfit(int profit) {
+		this.profit = new SimpleIntegerProperty(profit);
+	}
+
+	public CustomerModel getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerModel customer) {
+		this.customer = customer;
+	}
+
 	// Constructors
 	public ProductModel(String name, int costPrice, int sellingPrice) {
 		setName(name);
+		setQueueNumber(queueNumberGenerator++);
 		setCostPrice(costPrice);
 		setSellingPrice(sellingPrice);
+		setProfit(sellingPrice - costPrice);
+		setCustomer(null);
 	}
 
 	// Methods
-
 	@Override
 	public int compareTo(ProductModel other) {
-		return getTextualName().compareTo(other.getTextualName());
+		return getTextualID().compareTo(other.getTextualID());
 	}
 }
