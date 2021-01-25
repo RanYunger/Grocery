@@ -3,7 +3,11 @@ package ID316334473_ID302309513;
 import java.io.File;
 
 import ID316334473_ID302309513.Controllers.MainController;
+import ID316334473_ID302309513.Models.CustomerModel;
+import ID316334473_ID302309513.Models.ProductModel;
 import ID316334473_ID302309513.Views.MainView;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -26,6 +30,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 // Helper class which contains all UI methods, plus extra helpful methods.
 public class UIHandler {
@@ -147,12 +152,84 @@ public class UIHandler {
 		stage.getIcons().add(UIHandler.buildImage("Cart.png", 0, 0).getImage());
 	}
 
+	@SuppressWarnings("unchecked")
+	public static TableView<ProductModel> buildProductsTableView() {
+		TableView<ProductModel> tableView = new TableView<ProductModel>();
+		TableColumn<ProductModel, String> productIDTableColumn, productNameTableColumn;
+		TableColumn<ProductModel, Number> productCostPriceTableColumn, productSellingPriceTableColumn,
+				productProfitTableColumn;
+
+		productIDTableColumn = new TableColumn<ProductModel, String>("ID");
+		productIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
+		productIDTableColumn.setMinWidth(150);
+
+		productNameTableColumn = new TableColumn<ProductModel, String>("Name");
+		productNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableName());
+		productNameTableColumn.setMinWidth(150);
+
+		productCostPriceTableColumn = new TableColumn<ProductModel, Number>("Cost Price");
+		productCostPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableCostPrice());
+		productCostPriceTableColumn.setMinWidth(150);
+
+		productSellingPriceTableColumn = new TableColumn<ProductModel, Number>("Selling Price");
+		productSellingPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableSellingPrice());
+		productSellingPriceTableColumn.setMinWidth(150);
+
+		productProfitTableColumn = new TableColumn<ProductModel, Number>("Profit");
+		productProfitTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableProfit());
+		productProfitTableColumn.setMinWidth(150);
+
+		tableView.getColumns().addAll(productIDTableColumn, productNameTableColumn, productCostPriceTableColumn,
+				productSellingPriceTableColumn, productProfitTableColumn);
+		for (TableColumn<?, ?> tableColumn : tableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
+			tableColumn.setEditable(false);
+			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
+			tableColumn.setResizable(false);
+		}
+
+		return tableView;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static TableView<CustomerModel> buildCustomersTableView() {
+		TableView<CustomerModel> tableView = new TableView<CustomerModel>();
+		TableColumn<CustomerModel, String> customerNameTableColumn, customerPhoneNumberTableColumn;
+		TableColumn<CustomerModel, ImageView> interestedInUpdatesTableColumn;
+
+		customerNameTableColumn = new TableColumn<CustomerModel, String>("Name");
+		customerNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableName());
+		customerNameTableColumn.setMinWidth(150);
+
+		customerPhoneNumberTableColumn = new TableColumn<CustomerModel, String>("Phone Number");
+		customerPhoneNumberTableColumn.setCellValueFactory(cell -> cell.getValue().getObservablePhoneNumber());
+		customerPhoneNumberTableColumn.setMinWidth(150);
+
+		interestedInUpdatesTableColumn = new TableColumn<CustomerModel, ImageView>("Interested In Updates");
+		interestedInUpdatesTableColumn.setCellValueFactory(cell -> new SimpleObjectProperty<ImageView>(
+				cell.getValue().isInterestedInUpdates() ? buildImage("V.png", 10, 10) : buildImage("X.png", 10, 10)));
+		interestedInUpdatesTableColumn.setMinWidth(200);
+
+		tableView.getColumns().addAll(customerNameTableColumn, customerPhoneNumberTableColumn,
+				interestedInUpdatesTableColumn);
+		for (TableColumn<?, ?> tableColumn : tableView.getColumns()) {
+			tableColumn.setStyle("-fx-alignment: CENTER;");
+			tableColumn.setEditable(false);
+			tableColumn.setReorderable(false);
+			tableColumn.setSortable(false);
+			tableColumn.setResizable(false);
+		}
+
+		return tableView;
+	}
+
 	public static StackPane buildBackground(String backgroundImageName, Node node, double width, double height,
 			double fontSize) {
 		double imageHeight = 30;
-		ImageView backgroundImage = buildImage(backgroundImageName, width, height);
-//				audioImageView = buildImage(isAudioOn ? "AudioOn.png" : "AudioOff.png", imageHeight, imageHeight),
-//				homeImageView = buildImage("Home.png", imageHeight, imageHeight);
+		ImageView backgroundImage = buildImage(backgroundImageName, width, height),
+				audioImageView = buildImage(isAudioOn ? "AudioOn.png" : "AudioOff.png", imageHeight, imageHeight),
+				homeImageView = buildImage("Home.png", imageHeight, imageHeight);
 		VBox topVBox = new VBox();
 		Label creatorLabel = new Label("Ran & Natty's"), topLabel = new Label("Grocery™"),
 				bottomLabel = new Label("The only place to purchase shit");
@@ -160,20 +237,17 @@ public class UIHandler {
 
 		topVBox.setAlignment(Pos.CENTER);
 		creatorLabel.setFont(new Font(20));
-		creatorLabel.setTextFill(Color.WHITE);
 		topLabel.setFont(new Font(fontSize));
-		topLabel.setTextFill(Color.WHITE);
 		bottomLabel.setFont(new Font(fontSize));
-		bottomLabel.setTextFill(Color.WHITE);
 
 		topVBox.getChildren().addAll(creatorLabel, topLabel);
 		VBox.setMargin(creatorLabel, new Insets(10, 0, 0, 0));
 		VBox.setMargin(topLabel, new Insets(0, 0, -10, 0));
 
 		stackPane.getChildren().addAll(backgroundImage, topVBox, bottomLabel, node);
-//		stackPane.getChildren().addAll(audioImageView, homeImageView);
-//		StackPane.setMargin(audioImageView, new Insets(height, width * 0.95, height * 1.9, 10));
-//		StackPane.setMargin(homeImageView, new Insets(height, 10, height * 1.9, width * 0.95));
+		stackPane.getChildren().addAll(audioImageView, homeImageView);
+		StackPane.setMargin(audioImageView, new Insets(height, width * 0.95, height * 1.9, 10));
+		StackPane.setMargin(homeImageView, new Insets(height, 10, height * 1.9, width * 0.95));
 		StackPane.setMargin(topVBox, new Insets(height * 0.92, 0, height * 1.8, 0));
 		StackPane.setMargin(bottomLabel, new Insets(height * 0.92, 0, height * 0.08, 0));
 

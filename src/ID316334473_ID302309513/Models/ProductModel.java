@@ -28,7 +28,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 			UIHandler.showError("Product's name must contain at least 1 letter.");
 		this.name = new SimpleStringProperty(name);
 	}
-	
+
 	public SimpleStringProperty getObservableID() {
 		return id;
 	}
@@ -42,7 +42,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 			UIHandler.showError("Product's name must contain at least 1 letter.");
 		this.id = new SimpleStringProperty(ID);
 	}
-	
+
 	public SimpleIntegerProperty getObservableQueueNumber() {
 		return queueNumber;
 	}
@@ -84,7 +84,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 			UIHandler.showError("Product's selling price must be a non-negative number.");
 		this.sellingPrice = new SimpleIntegerProperty(sellingPrice);
 	}
-	
+
 	public SimpleIntegerProperty getObservableProfit() {
 		return profit;
 	}
@@ -106,13 +106,18 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 	}
 
 	// Constructors
-	public ProductModel(String name, int costPrice, int sellingPrice) {
-		setName(name);
+	public ProductModel(String productName, int costPrice, int sellingPrice, String customerName, String phoneNumber,
+			boolean interestedInUpdates) {
+		this(productName, costPrice, sellingPrice, new CustomerModel(customerName, phoneNumber, interestedInUpdates));
+	}
+
+	public ProductModel(String productName, int costPrice, int sellingPrice, CustomerModel customer) {
+		setName(productName);
 		setQueueNumber(queueNumberGenerator++);
 		setCostPrice(costPrice);
 		setSellingPrice(sellingPrice);
 		setProfit(sellingPrice - costPrice);
-		setCustomer(null);
+		setCustomer(customer);
 	}
 
 	// Methods

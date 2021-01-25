@@ -1,11 +1,8 @@
 package ID316334473_ID302309513;
 
-import java.util.ArrayList;
-
-import ID316334473_ID302309513.Controllers.MainController;
-import ID316334473_ID302309513.Views.MainView;
+import ID316334473_ID302309513.Controllers.EntryController;
+import ID316334473_ID302309513.Views.EntryView;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.stage.Stage;
 
 public class Program extends Application {
@@ -20,13 +17,8 @@ public class Program extends Application {
 	// Methods
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		MainView mainView = new MainView(primaryStage);
-//		MainController mainController = new MainController(mainView);
-
-//		UIHandler.playAudio("WeWillRockYou.mp3");
-//		mainController.addEventHandlersToGeneralButtons();
-//		UIHandler.setMainView(mainView);
-//		UIHandler.setMainController(mainController);
+		EntryView entryView = new EntryView(primaryStage);
+		EntryController entryController = new EntryController(entryView);
 	}
 
 	public static void main(String[] args) {
