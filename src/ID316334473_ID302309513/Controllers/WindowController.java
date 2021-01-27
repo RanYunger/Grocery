@@ -47,7 +47,7 @@ public abstract class WindowController extends Controller {
 				MainView mainView = new MainView();
 				MainController mainController = new MainController(mainView);
 
-				UIHandler.playAudio("WeWillRockYou.mp3");
+				UIHandler.playAudio("Cha-Ching.wav");
 				UIHandler.setMainView(mainView);
 				UIHandler.setMainController(mainController);
 

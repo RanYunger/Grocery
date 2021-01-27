@@ -22,7 +22,7 @@ public class CustomerModel {
 
 	private void setName(String name) {
 		if (name.isBlank())
-			UIHandler.showError("CustomerModel's name must contain at least 1 letter.");
+			UIHandler.showError(null, "CustomerModel's name must contain at least 1 letter.");
 		this.name = new SimpleStringProperty(name);
 	}
 
@@ -36,7 +36,7 @@ public class CustomerModel {
 
 	private void setPhoneNumber(String PhoneNumber) {
 		if (PhoneNumber.isBlank())
-			UIHandler.showError("CustomerModel's phone Number must contain at least 1 letter.");
+			UIHandler.showError(null, "CustomerModel's phone Number must contain at least 1 letter.");
 		this.phoneNumber = new SimpleStringProperty(PhoneNumber);
 	}
 

@@ -25,7 +25,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 
 	private void setName(String name) {
 		if (name.isBlank())
-			UIHandler.showError("Product's name must contain at least 1 letter.");
+			UIHandler.showError(null, "Product's name must contain at least 1 letter.");
 		this.name = new SimpleStringProperty(name);
 	}
 
@@ -39,7 +39,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 
 	public void setID(String ID) {
 		if (ID.isBlank())
-			UIHandler.showError("Product's name must contain at least 1 letter.");
+			UIHandler.showError(null, "Product's name must contain at least 1 letter.");
 		this.id = new SimpleStringProperty(ID);
 	}
 
@@ -53,7 +53,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 
 	private void setQueueNumber(int QueueNumber) {
 		if (QueueNumber < FIRST_QUEUE_NUMBER)
-			UIHandler.showError("Product's queue number must be a non-negative number.");
+			UIHandler.showError(null, "Product's queue number must be a non-negative number.");
 		this.queueNumber = new SimpleIntegerProperty(QueueNumber);
 	}
 
@@ -67,7 +67,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 
 	public void setCostPrice(int costPrice) {
 		if (costPrice < NO_PRICE)
-			UIHandler.showError("Product's cost price must be a non-negative number.");
+			UIHandler.showError(null, "Product's cost price must be a non-negative number.");
 		this.costPrice = new SimpleIntegerProperty(costPrice);
 	}
 
@@ -81,7 +81,7 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 
 	public void setSellingPrice(int sellingPrice) {
 		if (sellingPrice < NO_PRICE)
-			UIHandler.showError("Product's selling price must be a non-negative number.");
+			UIHandler.showError(null, "Product's selling price must be a non-negative number.");
 		this.sellingPrice = new SimpleIntegerProperty(sellingPrice);
 	}
 

@@ -7,7 +7,6 @@ import ID316334473_ID302309513.Models.CustomerModel;
 import ID316334473_ID302309513.Models.ProductModel;
 import ID316334473_ID302309513.Views.MainView;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -19,15 +18,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -100,11 +96,11 @@ public class UIHandler {
 			mediaPlayer.play();
 	}
 
-	private static void showAlert(AlertType alertType, String title, String header, String message,
+	private static void showAlert(AlertType alertType, Window owner, String title, String header, String message,
 			String audioFileName, boolean showAndWait) {
 		Alert alert = new Alert(alertType);
 
-		alert.initOwner(mainView.getStage());
+		alert.initOwner(owner);
 		alert.setX(alert.getOwner().getX() + alert.getOwner().getWidth() - alert.getWidth());
 		alert.setY(alert.getOwner().getY() + alert.getOwner().getHeight() - alert.getHeight());
 
@@ -126,20 +122,20 @@ public class UIHandler {
 			alert.show();
 	}
 
-	public static void showSuccess(String message, boolean hasAudio) {
-		showAlert(AlertType.INFORMATION, "Success", message, "", hasAudio ? "Yayyy.mp3" : "", hasAudio);
+	public static void showSuccess(Window owner, String message, boolean hasAudio) {
+		showAlert(AlertType.INFORMATION, owner, "Success", message, "", hasAudio ? "Yayyy.mp3" : "", hasAudio);
 	}
 
-	public static void showWarning(String message, boolean hasAudio) {
-		showAlert(AlertType.WARNING, "Warning", message, "", hasAudio ? "UhOh.mp3" : "", hasAudio);
+	public static void showWarning(Window owner, String message, boolean hasAudio) {
+		showAlert(AlertType.WARNING, owner, "Warning", message, "", hasAudio ? "UhOh.mp3" : "", hasAudio);
 	}
 
-	public static void showError(String message) {
-		showAlert(AlertType.ERROR, "Error", message, "", "Awww.mp3", true);
+	public static void showError(Window owner, String message) {
+		showAlert(AlertType.ERROR, owner, "Error", message, "", "Awww.mp3", true);
 	}
 
-	public static void showError(String header, String message) {
-		showAlert(AlertType.ERROR, "Error", header, message, "Awww.mp3", true);
+	public static void showError(Window owner, String header, String message) {
+		showAlert(AlertType.ERROR, owner, "Error", header, message, "Awww.mp3", true);
 	}
 
 	public static void setGeneralFeatures(Stage stage) {

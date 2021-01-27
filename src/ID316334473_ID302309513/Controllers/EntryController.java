@@ -69,8 +69,6 @@ public class EntryController extends WindowController {
 		EventHandler<MouseEvent> enterButtonEventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				UIHandler.playAudio("Cha-Ching.wav");
-
 				int sortOption = -1; // 0 = ID Ascending, 1 = ID Descending, 2 = Insertion Order
 
 				for (int i = 0; i < sortOptionRadioButtons.length; i++)
@@ -79,7 +77,8 @@ public class EntryController extends WindowController {
 						break;
 					}
 				if (sortOption < 0) {
-					// TODO: COMPLETE
+					UIHandler.showError(entryView.getStage(), "Please Choose a sorting method");
+					return;
 				}
 
 				MainView mainView = new MainView();
@@ -89,8 +88,7 @@ public class EntryController extends WindowController {
 				UIHandler.setMainController(mainController);
 
 				entryView.close();
-
-				// mainController.addEventHandlersToGeneralButtons();
+				mainController.addEventHandlersToGeneralButtons();
 			}
 		};
 

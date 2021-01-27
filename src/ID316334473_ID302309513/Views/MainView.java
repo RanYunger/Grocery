@@ -5,18 +5,12 @@ import ID316334473_ID302309513.Models.CustomerModel;
 import ID316334473_ID302309513.Models.ProductModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class MainView extends WindowView {
@@ -41,7 +35,7 @@ public class MainView extends WindowView {
 		super(primaryStage);
 
 		buildScene();
-		// addEffects();
+		addEffects();
 	}
 
 	// Methods
@@ -93,15 +87,12 @@ public class MainView extends WindowView {
 		UIHandler.setGeneralFeatures(stage);
 
 		stage.show();
+		UIHandler.playAudio("Cha-Ching.wav");
 	}
 
 	@Override
 	protected void addEffects() {
 		super.addEffects();
-
-//		UIHandler.addCursorEffectsToNode(playersImageView);
-//		UIHandler.addCursorEffectsToNode(tournamentsImageView);
-//		UIHandler.addCursorEffectsToNode(trophiesImageView);
 	}
 
 	@Override
