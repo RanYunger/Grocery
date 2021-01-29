@@ -1,7 +1,6 @@
 package ID316334473_ID302309513.Controllers;
 
 import ID316334473_ID302309513.UIHandler;
-import ID316334473_ID302309513.Views.MainView;
 import ID316334473_ID302309513.Views.View;
 import ID316334473_ID302309513.Views.WindowView;
 import javafx.event.EventHandler;
@@ -37,25 +36,7 @@ public abstract class WindowController extends Controller {
 				audioImageView.setImage(newImageView.getImage());
 			}
 		};
-		EventHandler<MouseEvent> homeImageViewEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				// Validations
-				if (view instanceof MainView)
-					return;
-
-				MainView mainView = new MainView();
-				MainController mainController = new MainController(mainView);
-
-				UIHandler.playAudio("Cha-Ching.wav");
-				UIHandler.setMainView(mainView);
-				UIHandler.setMainController(mainController);
-
-				view.close();
-			}
-		};
 
 		view.getAudioImageView().setOnMouseClicked(audioImageViewEventHandler);
-		view.getHomeImageView().setOnMouseClicked(homeImageViewEventHandler);
 	}
 }

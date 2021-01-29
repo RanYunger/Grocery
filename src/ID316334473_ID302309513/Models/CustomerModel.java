@@ -1,10 +1,14 @@
 package ID316334473_ID302309513.Models;
 
+import java.io.Serializable;
+
 import ID316334473_ID302309513.UIHandler;
 import javafx.beans.property.SimpleStringProperty;
 
-public class CustomerModel {
+public class CustomerModel implements Serializable {
 	// Constants
+	private static final long serialVersionUID = 1L;
+	
 	public static final int NO_PRICE = 0;
 
 	// Fields
@@ -60,4 +64,8 @@ public class CustomerModel {
 	}
 
 	// Methods
+	@Override
+	public String toString() {
+		return String.format("Customer [%s %s]", name, phoneNumber);
+	}
 }

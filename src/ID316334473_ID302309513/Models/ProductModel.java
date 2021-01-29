@@ -1,11 +1,15 @@
 package ID316334473_ID302309513.Models;
 
+import java.io.Serializable;
+
 import ID316334473_ID302309513.UIHandler;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public abstract class ProductModel implements Comparable<ProductModel> {
+public class ProductModel implements Serializable, Comparable<ProductModel> {
 	// Constants
+	private static final long serialVersionUID = 1L;
+	
 	public static final int NO_PRICE = 0, FIRST_QUEUE_NUMBER = 1;
 	private static int queueNumberGenerator = FIRST_QUEUE_NUMBER;
 
@@ -106,12 +110,15 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 	}
 
 	// Constructors
-	public ProductModel(String productName, int costPrice, int sellingPrice, String customerName, String phoneNumber,
-			boolean interestedInUpdates) {
-		this(productName, costPrice, sellingPrice, new CustomerModel(customerName, phoneNumber, interestedInUpdates));
+	public ProductModel(String ID, String productName, int costPrice, int sellingPrice, String customerName,
+			String phoneNumber, boolean interestedInUpdates) {
+		this(ID, productName, costPrice, sellingPrice,
+				new CustomerModel(customerName, phoneNumber, interestedInUpdates));
 	}
 
-	public ProductModel(String productName, int costPrice, int sellingPrice, CustomerModel customer) {
+	// This constructor is used when the user creates a product
+	public ProductModel(String ID, String productName, int costPrice, int sellingPrice, CustomerModel customer) {
+		setID(ID);
 		setName(productName);
 		setQueueNumber(queueNumberGenerator++);
 		setCostPrice(costPrice);
@@ -120,9 +127,26 @@ public abstract class ProductModel implements Comparable<ProductModel> {
 		setCustomer(customer);
 	}
 
+	// This constructor is used when the a product is read from file
+//	public ProductModel(String ID, String productName, int queueNumber, int costPrice, int sellingPrice,
+//			CustomerModel customer) { 
+//		setID(ID);
+//		setName(productName);
+//		setQueueNumber(queueNumber);
+//		setCostPrice(costPrice);
+//		setSellingPrice(sellingPrice);
+//		setProfit(sellingPrice - costPrice);
+//		setCustomer(customer);
+//	}
+
 	// Methods
 	@Override
 	public int compareTo(ProductModel other) {
 		return getTextualID().compareTo(other.getTextualID());
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Product [%s %s %d %d %d]", id, name, queueNumber, costPrice, sellingPrice);
 	}
 }

@@ -74,11 +74,6 @@ public class UIHandler {
 		node.setOnMouseExited(entered -> node.getScene().setCursor(Cursor.DEFAULT));
 	}
 
-	public static void addAudioToImageView(ImageView imageView, String audioFileName) {
-		imageView.setOnMouseClicked(click -> playAudio(audioFileName));
-		addCursorEffectsToNode(imageView);
-	}
-
 	@SuppressWarnings("static-access")
 	public static void playAudio(String audioFileName) {
 		String path = String.format("%s\\bin\\%s", System.getProperty("user.dir"), audioFileName);
@@ -224,8 +219,7 @@ public class UIHandler {
 			double fontSize) {
 		double imageHeight = 30;
 		ImageView backgroundImage = buildImage(backgroundImageName, width, height),
-				audioImageView = buildImage(isAudioOn ? "AudioOn.png" : "AudioOff.png", imageHeight, imageHeight),
-				homeImageView = buildImage("Home.png", imageHeight, imageHeight);
+				audioImageView = buildImage(isAudioOn ? "AudioOn.png" : "AudioOff.png", imageHeight, imageHeight);
 		VBox topVBox = new VBox();
 		Label creatorLabel = new Label("Ran & Natty's"), topLabel = new Label("Grocery™"),
 				bottomLabel = new Label("The only place to purchase shit");
@@ -241,9 +235,8 @@ public class UIHandler {
 		VBox.setMargin(topLabel, new Insets(0, 0, -10, 0));
 
 		stackPane.getChildren().addAll(backgroundImage, topVBox, bottomLabel, node);
-		stackPane.getChildren().addAll(audioImageView, homeImageView);
+		stackPane.getChildren().addAll(audioImageView);
 		StackPane.setMargin(audioImageView, new Insets(height, width * 0.95, height * 1.9, 10));
-		StackPane.setMargin(homeImageView, new Insets(height, 10, height * 1.9, width * 0.95));
 		StackPane.setMargin(topVBox, new Insets(height * 0.92, 0, height * 1.8, 0));
 		StackPane.setMargin(bottomLabel, new Insets(height * 0.92, 0, height * 0.08, 0));
 
