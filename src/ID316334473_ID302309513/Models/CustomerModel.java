@@ -1,14 +1,11 @@
 package ID316334473_ID302309513.Models;
 
-import java.io.Serializable;
-
+import ID316334473_ID302309513.ByteConverter;
 import ID316334473_ID302309513.UIHandler;
 import javafx.beans.property.SimpleStringProperty;
 
-public class CustomerModel implements Serializable {
+public class CustomerModel implements iByteable {
 	// Constants
-	private static final long serialVersionUID = 1L;
-	
 	public static final int NO_PRICE = 0;
 
 	// Fields
@@ -48,7 +45,7 @@ public class CustomerModel implements Serializable {
 		return interestedInUpdates;
 	}
 
-	public void setInterestedInUpdates(boolean interested) {
+	private void setInterestedInUpdates(boolean interested) {
 		this.interestedInUpdates = interested;
 	}
 
@@ -66,6 +63,35 @@ public class CustomerModel implements Serializable {
 	// Methods
 	@Override
 	public String toString() {
-		return String.format("Customer [%s %s]", name, phoneNumber);
+		return String.format("Customer [Name:%s Phone:%s]", getTextualName(), getTextualPhoneNumber());
+	}
+
+	@Override
+	public byte[] toByteArray() {
+		byte[] customerBytes = new byte[getLengthInBytes()], bufferBytes = null;
+		int currentOffset = 0;
+
+		bufferBytes = ByteConverter.fromInteger(getTextualName().length());
+		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		currentOffset += bufferBytes.length;
+		bufferBytes = ByteConverter.fromString(getTextualName());
+		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		currentOffset += bufferBytes.length;
+
+		bufferBytes = ByteConverter.fromInteger(getTextualPhoneNumber().length());
+		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		currentOffset += bufferBytes.length;
+		bufferBytes = ByteConverter.fromString(getTextualPhoneNumber());
+		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		currentOffset += bufferBytes.length;
+
+		customerBytes[customerBytes.length - 1] = ByteConverter.fromBoolean(interestedInUpdates);
+
+		return customerBytes;
+	}
+
+	@Override
+	public int getLengthInBytes() {
+		return (4 + getTextualName().length()) + (4 + getTextualPhoneNumber().length()) + 1;
 	}
 }
