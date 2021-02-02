@@ -33,18 +33,15 @@ public class ByteConverter {
 	public static ProductModel toProduct(byte[] bytes) {
 		CustomerModel customer = null;
 		String id, name;
-		int offset = 0, currentLength, queueNumber, costPrice, sellingPrice, profit;
+		int offset = 0, currentLength, costPrice, sellingPrice, profit;
 
 		currentLength = toInteger(bytes, offset);
 		id = toString(bytes, 4, currentLength);
 		offset += 4 + currentLength;
 
 		currentLength = toInteger(bytes, offset);
-		name = toString(bytes, offset, currentLength);
+		name = toString(bytes, offset + 4, currentLength);
 		offset += 4 + currentLength;
-
-		queueNumber = toInteger(bytes, offset);
-		offset += 4;
 
 		costPrice = toInteger(bytes, offset);
 		offset += 4;
@@ -55,21 +52,21 @@ public class ByteConverter {
 		profit = toInteger(bytes, offset);
 		offset += 4;
 
-		customer = toCustomer(bytes, toInteger(bytes, offset));
+		customer = bytes[offset] == 1 ? toCustomer(bytes, ++offset) : null;
 
 		return new ProductModel(id, name, costPrice, sellingPrice, customer);
 	}
 
-	public static CustomerModel toCustomer(byte[] bytes, int bytesCount) {
+	public static CustomerModel toCustomer(byte[] bytes, int offset) {
 		String name, phoneNumber;
-		int offset = 0, currentLength;
+		int currentLength;
 
 		currentLength = toInteger(bytes, offset);
-		name = toString(bytes, 4, currentLength);
+		name = toString(bytes, offset + 4, currentLength);
 		offset += 4 + currentLength;
 
 		currentLength = toInteger(bytes, offset);
-		phoneNumber = toString(bytes, offset, currentLength);
+		phoneNumber = toString(bytes, offset + 4, currentLength);
 		offset += 4 + currentLength;
 
 		return new CustomerModel(name, phoneNumber, bytes[offset] == 1);

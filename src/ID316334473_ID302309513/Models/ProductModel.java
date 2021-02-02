@@ -8,11 +8,10 @@ import javafx.beans.property.SimpleStringProperty;
 public class ProductModel implements Comparable<ProductModel>, iByteable {
 	// Constants
 	public static final int NO_PRICE = 0, FIRST_QUEUE_NUMBER = 1;
-	private static int queueNumberGenerator = FIRST_QUEUE_NUMBER;
 
 	// Fields
 	private SimpleStringProperty id, name;
-	private SimpleIntegerProperty queueNumber, costPrice, sellingPrice, profit;
+	private SimpleIntegerProperty costPrice, sellingPrice, profit;
 	private CustomerModel customer;
 
 	// Properties (Getters and Setters)
@@ -42,20 +41,6 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 		if (ID.isBlank())
 			UIHandler.showError(null, "Product's name must contain at least 1 letter.");
 		this.id = new SimpleStringProperty(ID);
-	}
-
-	public SimpleIntegerProperty getObservableQueueNumber() {
-		return queueNumber;
-	}
-
-	public int getNumericQueueNumber() {
-		return queueNumber.get();
-	}
-
-	private void setQueueNumber(int QueueNumber) {
-		if (QueueNumber < FIRST_QUEUE_NUMBER)
-			UIHandler.showError(null, "Product's queue number must be a non-negative number.");
-		this.queueNumber = new SimpleIntegerProperty(QueueNumber);
 	}
 
 	public SimpleIntegerProperty getObservableCostPrice() {
@@ -109,14 +94,12 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	// Constructors
 	public ProductModel(String ID, String name, int costPrice, int sellingPrice, String customerName,
 			String phoneNumber, boolean interestedInUpdates) {
-		this(ID, name, costPrice, sellingPrice,
-				new CustomerModel(customerName, phoneNumber, interestedInUpdates));
+		this(ID, name, costPrice, sellingPrice, new CustomerModel(customerName, phoneNumber, interestedInUpdates));
 	}
 
 	public ProductModel(String ID, String name, int costPrice, int sellingPrice, CustomerModel customer) {
 		setID(ID);
 		setName(name);
-		setQueueNumber(queueNumberGenerator++);
 		setCostPrice(costPrice);
 		setSellingPrice(sellingPrice);
 		setProfit(sellingPrice - costPrice);
@@ -130,53 +113,56 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	}
 
 	@Override
-	public String toString() {
-		return String.format("Product [ID:%s Name:%s (#%d) Cost:%d Selling:%d]", getTextualID(), getTextualName(),
-				getNumericQueueNumber(), getNumericCostPrice(), getNumericSellingPrice());
-	}
-
-	@Override
 	public byte[] toByteArray() {
-		byte[] productBytes = new byte[getLengthInBytes()], customerBytes = customer.toByteArray(), bufferBytes = null;
+		byte[] productBytes = new byte[getLengthInBytes()],
+				customerBytes = customer != null ? customer.toByteArray() : null, bufferBytes = null;
 		int currentOffset = 0;
 
 		bufferBytes = ByteConverter.fromInteger(getTextualID().length());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 		bufferBytes = ByteConverter.fromString(getTextualID());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 
 		bufferBytes = ByteConverter.fromInteger(getTextualName().length());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 		bufferBytes = ByteConverter.fromString(getTextualName());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
-		currentOffset += bufferBytes.length;
-
-		bufferBytes = ByteConverter.fromInteger(getNumericQueueNumber());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 
 		bufferBytes = ByteConverter.fromInteger(getNumericCostPrice());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 
 		bufferBytes = ByteConverter.fromInteger(getNumericSellingPrice());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 
 		bufferBytes = ByteConverter.fromInteger(getNumericProfit());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
+		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 
-		System.arraycopy(customerBytes, 0, productBytes, currentOffset, customerBytes.length);
+		productBytes[currentOffset] = ByteConverter.fromBoolean(customer != null);
+		if (customer != null)
+			System.arraycopy(customerBytes, 0, productBytes, ++currentOffset, customerBytes.length);
 
 		return productBytes;
 	}
 
 	@Override
 	public int getLengthInBytes() {
-		return (4 + getTextualID().length()) + (4 + getTextualName().length()) + 16 + customer.getLengthInBytes();
+		int customerLengthInBytes = customer != null ? customer.getLengthInBytes() : 0;
+
+		return (4 + getTextualID().length()) + (4 + getTextualName().length()) + 12 + (1 + customerLengthInBytes);
+	}
+
+	@Override
+	public String toString() {
+		String customerStr = customer == null ? "NO CUSTOMER" : customer.toString();
+
+		return String.format("Product [ID:%s Name:%s Cost:%d Selling:%d %s]", getTextualID(), getTextualName(),
+				getNumericCostPrice(), getNumericSellingPrice(), customerStr);
 	}
 }

@@ -118,7 +118,7 @@ public class UIHandler {
 	}
 
 	public static void showSuccess(Window owner, String message, boolean hasAudio) {
-		showAlert(AlertType.INFORMATION, owner, "Success", message, "", hasAudio ? "Yayyy.mp3" : "", hasAudio);
+		showAlert(AlertType.INFORMATION, owner, "Success", message, "", hasAudio ? "Alright.wav" : "", hasAudio);
 	}
 
 	public static void showWarning(Window owner, String message, boolean hasAudio) {
@@ -126,11 +126,11 @@ public class UIHandler {
 	}
 
 	public static void showError(Window owner, String message) {
-		showAlert(AlertType.ERROR, owner, "Error", message, "", "Awww.mp3", true);
+		showAlert(AlertType.ERROR, owner, "Error", message, "", "OhNo.wav", true);
 	}
 
 	public static void showError(Window owner, String header, String message) {
-		showAlert(AlertType.ERROR, owner, "Error", header, message, "Awww.mp3", true);
+		showAlert(AlertType.ERROR, owner, "Error", header, message, "OhNo.wav", true);
 	}
 
 	public static void setGeneralFeatures(Stage stage) {
