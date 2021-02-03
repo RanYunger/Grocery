@@ -33,7 +33,7 @@ public class FileHandler implements Iterable<ProductModel> {
 		return false;
 	}
 
-	public long getOffsetByProductID(String productID) {
+	public long seekProduct(String productID) {
 		byte[] buffer = new byte[productID.length()];
 		String readProductID = null;
 
@@ -46,7 +46,7 @@ public class FileHandler implements Iterable<ProductModel> {
 				raf.read(buffer);
 				readProductID = ByteConverter.toString(buffer, 0, buffer.length);
 				if (readProductID.compareTo(productID) == 0) {
-					fileOffset -= 8;
+					fileOffset -= 9; // 8 to first byte of product, 1 for the increment in loop
 
 					return fileOffset;
 				}
@@ -145,33 +145,27 @@ public class FileHandler implements Iterable<ProductModel> {
 
 		@Override
 		public void remove() {
-			byte[] productBytes = null, restOfBytes = null;
+			byte[] restOfBytes = null;
 			long prevLength, removeOffset = fileOffset;
+			int bytesToSkip = 0;
 
-			// TODO: FIX (make sure fileOffset looks at the correct byte!!)
 			try {
 				raf = new RandomAccessFile(PATH, "rw");
 
-				System.out.println("Before remove:");
 				prevLength = raf.length();
-				System.out.println("raf.length = " + raf.length() + ", fileOffset = " + fileOffset);
-				raf.seek(fileOffset);
-				
-				productBytes = new byte[raf.readInt()];
-				System.out.println("product bytes = " + productBytes.length);
-				raf.read(productBytes);
+				raf.seek(Long.parseLong("" + fileOffset, 16));
+
+				bytesToSkip = raf.readInt();
+				raf.skipBytes(bytesToSkip);
 				fileOffset = raf.getFilePointer();
 
-				restOfBytes = new byte[(int) (raf.length() - fileOffset)];
+				restOfBytes = new byte[(int) (raf.length() - bytesToSkip)];
 				raf.read(restOfBytes);
 
-				raf.seek(removeOffset);
+				raf.seek(Long.parseLong("" + removeOffset, 16));
 				raf.write(restOfBytes);
 				fileOffset = removeOffset; // return to where the removed product was
-				raf.setLength(prevLength - fileOffset);
-
-				System.out.println("After remove:");
-				System.out.println("raf.length = " + raf.length() + ", fileOffset = " + fileOffset);
+				raf.setLength(prevLength - bytesToSkip - 4);
 
 				raf.close();
 			} catch (Exception ex) {
