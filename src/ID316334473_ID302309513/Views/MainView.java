@@ -3,6 +3,8 @@ package ID316334473_ID302309513.Views;
 import ID316334473_ID302309513.UIHandler;
 import ID316334473_ID302309513.Models.CustomerModel;
 import ID316334473_ID302309513.Models.ProductModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,10 +23,47 @@ public class MainView extends WindowView {
 	private VBox buttonsVBox;
 	private Button addProductButton, removeLastProductButton, removeProductByIDButton, removeAllProductsButton,
 			notifyCustomersButton;
+	private ObservableList<ProductModel> allProducts;
+	private ObservableList<CustomerModel> allCustomers;
 	private TableView<ProductModel> productsTableView;
 	private TableView<CustomerModel> customersTableView;
 
 	// Properties (Getters and Setters)
+	public Button getAddProductButton() {
+		return addProductButton;
+	}
+
+	public Button getRemoveLastProductButton() {
+		return removeLastProductButton;
+	}
+
+	public Button getRemoveProductByIDButton() {
+		return removeProductByIDButton;
+	}
+
+	public Button getRemoveAllProductsButton() {
+		return removeAllProductsButton;
+	}
+
+	public Button getNotifyCustomersButton() {
+		return notifyCustomersButton;
+	}
+
+	public ObservableList<ProductModel> getAllProducts() {
+		return allProducts;
+	}
+
+	public ObservableList<CustomerModel> getAllCustomers() {
+		return allCustomers;
+	}
+
+	public TableView<ProductModel> getProductsTableView() {
+		return productsTableView;
+	}
+
+	public TableView<CustomerModel> getCustomersTableView() {
+		return customersTableView;
+	}
 
 	// Constructors
 	public MainView() {
@@ -36,6 +75,8 @@ public class MainView extends WindowView {
 
 		buildScene();
 		addEffects();
+
+		readAllProducts();
 	}
 
 	// Methods
@@ -98,5 +139,19 @@ public class MainView extends WindowView {
 	@Override
 	protected Node asNode() {
 		return (Node) hBox;
+	}
+
+	public void readAllProducts() {
+		allProducts = FXCollections.observableArrayList();
+		allCustomers = FXCollections.observableArrayList();
+
+		// TODO: COMPLETE
+
+		productsTableView.setItems(allProducts);
+		customersTableView.setItems(allCustomers);
+	}
+
+	public void writeAllProducts() {
+		// TODO: COMPLETE
 	}
 }

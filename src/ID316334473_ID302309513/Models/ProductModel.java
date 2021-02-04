@@ -2,7 +2,6 @@ package ID316334473_ID302309513.Models;
 
 import ID316334473_ID302309513.ByteConverter;
 import ID316334473_ID302309513.UIHandler;
-import ID316334473_ID302309513.ValidPatterns;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -117,12 +116,12 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	public byte[] toByteArray() {
 		byte[] productBytes = new byte[getLengthInBytes()],
 				customerBytes = customer != null ? customer.toByteArray() : null, bufferBytes = null;
-		byte productIDSeperator = (byte)'#';
+		byte productIDSeperator = (byte) '#';
 		int currentOffset = 0;
 
 		bufferBytes = ByteConverter.fromInteger(getTextualID().length());
 		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
-		currentOffset += bufferBytes.length;		
+		currentOffset += bufferBytes.length;
 		productBytes[currentOffset++] = productIDSeperator;
 		bufferBytes = ByteConverter.fromString(getTextualID());
 		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
@@ -155,7 +154,8 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	public int getLengthInBytes() {
 		int customerLengthInBytes = customer != null ? customer.getLengthInBytes() : 0;
 
-		return (4 + (1 + getTextualID().length() + 1)) + (4 + getTextualName().length()) + 8 + (1 + customerLengthInBytes);
+		return (4 + (1 + getTextualID().length() + 1)) + (4 + getTextualName().length()) + 8
+				+ (1 + customerLengthInBytes);
 	}
 
 	@Override

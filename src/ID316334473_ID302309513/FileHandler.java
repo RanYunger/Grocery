@@ -13,10 +13,10 @@ public class FileHandler implements Iterable<ProductModel> {
 	// Fields
 	private RandomAccessFile raf;
 	private long fileOffset;
-
+	
 	// Constructors
 	public FileHandler() {
-		fileOffset = 0x00;
+		fileOffset = 00;
 	}
 
 	// Methods
@@ -35,30 +35,26 @@ public class FileHandler implements Iterable<ProductModel> {
 
 	public long seekProduct(String productID) {
 		byte[] buffer = new byte[2 + productID.length()];
+		long prevOffset = fileOffset;
 		String readProductID = null;
 
 		try {
-			raf = new RandomAccessFile(PATH, "r");
-
 			productID = String.format("#%s#", productID);
+
 			fileOffset = 0x08;
 			while ((fileOffset + buffer.length) < raf.length()) {
 				raf.seek(fileOffset);
 				raf.read(buffer);
 				readProductID = ByteConverter.toString(buffer, 0, buffer.length);
 				if (readProductID.compareTo(productID) == 0) {
-					fileOffset -= 10; // 4 product length + 4 id length + 2 seperators
-					System.out.println("seek: fileOffset = 0x" + fileOffset);
+					fileOffset -= 0x08; // 4 product length + 4 id length
 
-					return Long.parseLong("" + fileOffset, 16);
+					return fileOffset;
 				}
 
 				fileOffset++;
 			}
-
-			raf.close();
-
-			return -1;
+			fileOffset = prevOffset;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
@@ -68,12 +64,13 @@ public class FileHandler implements Iterable<ProductModel> {
 
 	public ProductModel readProductFromFile() {
 		byte[] productBytes = null;
+		int productLength;
 
 		try {
-			// TODO: FIX (the second product reads WAY TOO bytes as its length
-			productBytes = new byte[raf.readInt()];
+			productLength = raf.readInt();
+			productBytes = new byte[productLength];
 			raf.read(productBytes);
-			fileOffset = Long.parseLong("" + raf.getFilePointer(), 16);
+			fileOffset = raf.getFilePointer();
 
 			return ByteConverter.toProduct(productBytes);
 		} catch (Exception ex) {
@@ -84,18 +81,33 @@ public class FileHandler implements Iterable<ProductModel> {
 	}
 
 	public void writeProductToFile(ProductModel product) {
-		byte[] productBytes = product.toByteArray();
+		byte[] productBytes = product.toByteArray(), restOfBytes = new byte[0];
+		long productOffset = -1, prevLength = 0, diff = 0, bytesToSkip;
 
-		// TODO: FIX (add option to overwrite the product or to append it)
 		try {
 			raf = new RandomAccessFile(PATH, "rw");
+			productOffset = seekProduct(product.getTextualID());
+			prevLength = raf.length();
 
-			raf.seek(raf.length());
+			// Overwriting the product
+			if (productOffset != -1) {
+				raf.seek(productOffset);
+				bytesToSkip = raf.readInt();
+				diff = productBytes.length - bytesToSkip;
+				raf.skipBytes((int) bytesToSkip);
+				restOfBytes = new byte[(int) (raf.length() - raf.getFilePointer())];
+				raf.read(restOfBytes);
+			}
+
+			raf.seek(productOffset != -1 ? productOffset : prevLength);
 			raf.writeInt(productBytes.length);
 			raf.write(productBytes);
-			// fileOffset = Long.parseLong("" + raf.getFilePointer(), 16);
+			raf.write(restOfBytes);
+			fileOffset = raf.getFilePointer();
+			raf.setLength(restOfBytes.length > 0 ? prevLength + diff : raf.length());
 
 			raf.close();
+
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
@@ -117,7 +129,7 @@ public class FileHandler implements Iterable<ProductModel> {
 			try {
 				raf = new RandomAccessFile(PATH, "r");
 
-				hasNext = Long.parseLong("" + fileOffset, 16) < raf.length();
+				hasNext = (raf.length() - fileOffset) > 8;
 
 				raf.close();
 
@@ -136,9 +148,9 @@ public class FileHandler implements Iterable<ProductModel> {
 			try {
 				raf = new RandomAccessFile(PATH, "r");
 
-				raf.seek(Long.parseLong("" + fileOffset, 16));
+				raf.seek(fileOffset);
 				readProduct = readProductFromFile();
-				
+
 				raf.close();
 
 				return readProduct;
@@ -160,10 +172,8 @@ public class FileHandler implements Iterable<ProductModel> {
 				raf = new RandomAccessFile(PATH, "rw");
 
 				prevLength = raf.length();
-				System.out.println("remove: fileOffset = 0d" + fileOffset);
-				raf.seek(Long.parseLong("" + fileOffset, 16));
 
-				System.out.println("FilePointer = " + raf.getFilePointer());
+				raf.seek(fileOffset);
 				bytesToSkip = raf.readInt();
 				raf.skipBytes(bytesToSkip);
 				fileOffset = raf.getFilePointer();
@@ -171,10 +181,10 @@ public class FileHandler implements Iterable<ProductModel> {
 				restOfBytes = new byte[(int) (raf.length() - bytesToSkip)];
 				raf.read(restOfBytes);
 
-				raf.seek(Long.parseLong("" + removeOffset, 16));
+				raf.seek(removeOffset);
 				raf.write(restOfBytes);
-				fileOffset = Long.parseLong("" + removeOffset, 16); // return to where the removed product was
-				raf.setLength(Long.parseLong("" + (prevLength - bytesToSkip - 4), 16));
+				fileOffset = removeOffset; // return to where the removed product was
+				raf.setLength(prevLength - bytesToSkip - 4);
 
 				raf.close();
 			} catch (Exception ex) {

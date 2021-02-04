@@ -1,19 +1,20 @@
 package ID316334473_ID302309513.Models;
 
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
+import ID316334473_ID302309513.FileHandler;
+
 public class GroceryModel {
 	// Constants
-	public static final int NO_PRICE = 0;
 
 	// Fields
 	private TreeMap<String, ProductModel> allProducts;
 	private List<CustomerModel> allCustomers;
-	private RandomAccessFile productsBinaryFile;
+	private FileHandler fileHandler;
 
 	// Properties (Getters and Setters)
 	public TreeMap<String, ProductModel> getAllProducts() {
@@ -36,10 +37,23 @@ public class GroceryModel {
 	public GroceryModel(Comparator<? super String> comparator) {
 		setAllProducts(new TreeMap<String, ProductModel>(comparator));
 		setAllCustomers(new ArrayList<CustomerModel>());
+		fileHandler = new FileHandler();
+		
+		readAllProducts();
 	}
 
 	// Methods
-	public int comparatorByIDAscending(ProductModel p1, ProductModel p2) {
-		return p1.compareTo(p2);
+	private void readAllProducts() {
+		Iterator<ProductModel> it = fileHandler.iterator();
+		ProductModel currentProduct = null;
+		CustomerModel currentCustomer = null;
+		
+		while (it.hasNext()) {
+			currentProduct = it.next();
+			allProducts.put(currentProduct.getTextualID(), currentProduct);
+			currentCustomer = currentProduct.getCustomer();
+			if(currentCustomer != null)
+				allCustomers.add(currentCustomer);
+		}
 	}
 }
