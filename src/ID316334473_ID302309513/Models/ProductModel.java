@@ -2,6 +2,7 @@ package ID316334473_ID302309513.Models;
 
 import ID316334473_ID302309513.ByteConverter;
 import ID316334473_ID302309513.UIHandler;
+import ID316334473_ID302309513.ValidPatterns;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -15,20 +16,6 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	private CustomerModel customer;
 
 	// Properties (Getters and Setters)
-	public SimpleStringProperty getObservableName() {
-		return name;
-	}
-
-	public String getTextualName() {
-		return name.get();
-	}
-
-	private void setName(String name) {
-		if (name.isBlank())
-			UIHandler.showError(null, "Product's name must contain at least 1 letter.");
-		this.name = new SimpleStringProperty(name);
-	}
-
 	public SimpleStringProperty getObservableID() {
 		return id;
 	}
@@ -38,9 +25,23 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	}
 
 	private void setID(String ID) {
-		if (ID.isBlank())
-			UIHandler.showError(null, "Product's name must contain at least 1 letter.");
+//		if (!ID.matches(ValidPatterns.PRODUCT_ID.getPattern()))
+//			UIHandler.showError(null, "Product's name invalid.");
 		this.id = new SimpleStringProperty(ID);
+	}
+
+	public SimpleStringProperty getObservableName() {
+		return name;
+	}
+
+	public String getTextualName() {
+		return name.get();
+	}
+
+	private void setName(String name) {
+//		if (!name.matches(ValidPatterns.PRODUCT_NAME.getPattern()))
+//			UIHandler.showError(null, "Product's name invalid.");
+		this.name = new SimpleStringProperty(name);
 	}
 
 	public SimpleIntegerProperty getObservableCostPrice() {
@@ -116,14 +117,17 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	public byte[] toByteArray() {
 		byte[] productBytes = new byte[getLengthInBytes()],
 				customerBytes = customer != null ? customer.toByteArray() : null, bufferBytes = null;
+		byte productIDSeperator = (byte)'#';
 		int currentOffset = 0;
 
 		bufferBytes = ByteConverter.fromInteger(getTextualID().length());
 		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
-		currentOffset += bufferBytes.length;
+		currentOffset += bufferBytes.length;		
+		productBytes[currentOffset++] = productIDSeperator;
 		bufferBytes = ByteConverter.fromString(getTextualID());
 		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
+		productBytes[currentOffset++] = productIDSeperator;
 
 		bufferBytes = ByteConverter.fromInteger(getTextualName().length());
 		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
@@ -140,13 +144,9 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 
-		bufferBytes = ByteConverter.fromInteger(getNumericProfit());
-		System.arraycopy(bufferBytes, 0, productBytes, currentOffset, bufferBytes.length);
-		currentOffset += bufferBytes.length;
-
-		productBytes[currentOffset] = ByteConverter.fromBoolean(customer != null);
+		productBytes[currentOffset++] = ByteConverter.fromBoolean(customer != null);
 		if (customer != null)
-			System.arraycopy(customerBytes, 0, productBytes, ++currentOffset, customerBytes.length);
+			System.arraycopy(customerBytes, 0, productBytes, currentOffset, customerBytes.length);
 
 		return productBytes;
 	}
@@ -155,7 +155,7 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	public int getLengthInBytes() {
 		int customerLengthInBytes = customer != null ? customer.getLengthInBytes() : 0;
 
-		return (4 + getTextualID().length()) + (4 + getTextualName().length()) + 12 + (1 + customerLengthInBytes);
+		return (4 + (1 + getTextualID().length() + 1)) + (4 + getTextualName().length()) + 8 + (1 + customerLengthInBytes);
 	}
 
 	@Override

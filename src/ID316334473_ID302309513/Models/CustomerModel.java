@@ -2,6 +2,7 @@ package ID316334473_ID302309513.Models;
 
 import ID316334473_ID302309513.ByteConverter;
 import ID316334473_ID302309513.UIHandler;
+import ID316334473_ID302309513.ValidPatterns;
 import javafx.beans.property.SimpleStringProperty;
 
 public class CustomerModel implements iByteable {
@@ -22,8 +23,8 @@ public class CustomerModel implements iByteable {
 	}
 
 	private void setName(String name) {
-		if (name.isBlank())
-			UIHandler.showError(null, "CustomerModel's name must contain at least 1 letter.");
+//		if (!name.matches(ValidPatterns.CUSTOMER_FULL_NAME.getPattern()))
+//			UIHandler.showError(null, "CustomerModel's name invalid.");
 		this.name = new SimpleStringProperty(name);
 	}
 
@@ -36,8 +37,8 @@ public class CustomerModel implements iByteable {
 	}
 
 	private void setPhoneNumber(String PhoneNumber) {
-		if (PhoneNumber.isBlank())
-			UIHandler.showError(null, "CustomerModel's phone Number must contain at least 1 letter.");
+//		if (!PhoneNumber.matches(ValidPatterns.CUSTOMER_PHONE_NUMBER.getPattern()))
+//			UIHandler.showError(null, "CustomerModel's phone Number invalid.");
 		this.phoneNumber = new SimpleStringProperty(PhoneNumber);
 	}
 
@@ -78,9 +79,6 @@ public class CustomerModel implements iByteable {
 		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
 
-		bufferBytes = ByteConverter.fromInteger(getTextualPhoneNumber().length());
-		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
-		currentOffset += bufferBytes.length;
 		bufferBytes = ByteConverter.fromString(getTextualPhoneNumber());
 		System.arraycopy(bufferBytes, 0, customerBytes, currentOffset, bufferBytes.length);
 		currentOffset += bufferBytes.length;
@@ -92,6 +90,6 @@ public class CustomerModel implements iByteable {
 
 	@Override
 	public int getLengthInBytes() {
-		return (4 + getTextualName().length()) + (4 + getTextualPhoneNumber().length()) + 1;
+		return (4 + getTextualName().length()) + 10 + 1;
 	}
 }

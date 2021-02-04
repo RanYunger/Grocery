@@ -33,11 +33,11 @@ public class ByteConverter {
 	public static ProductModel toProduct(byte[] bytes) {
 		CustomerModel customer = null;
 		String id, name;
-		int offset = 0, currentLength, costPrice, sellingPrice, profit;
+		int offset = 0, currentLength, costPrice, sellingPrice;
 
 		currentLength = toInteger(bytes, offset);
-		id = toString(bytes, 4, currentLength);
-		offset += 4 + currentLength;
+		id = toString(bytes, offset + 5, currentLength);
+		offset += (4 + currentLength) + 2; // 4 ID length bytes, 2 seperator bytes
 
 		currentLength = toInteger(bytes, offset);
 		name = toString(bytes, offset + 4, currentLength);
@@ -47,9 +47,6 @@ public class ByteConverter {
 		offset += 4;
 
 		sellingPrice = toInteger(bytes, offset);
-		offset += 4;
-
-		profit = toInteger(bytes, offset);
 		offset += 4;
 
 		customer = bytes[offset] == 1 ? toCustomer(bytes, ++offset) : null;
@@ -65,9 +62,9 @@ public class ByteConverter {
 		name = toString(bytes, offset + 4, currentLength);
 		offset += 4 + currentLength;
 
-		currentLength = toInteger(bytes, offset);
-		phoneNumber = toString(bytes, offset + 4, currentLength);
-		offset += 4 + currentLength;
+		currentLength = 10;
+		phoneNumber = toString(bytes, offset, currentLength);
+		offset += currentLength;
 
 		return new CustomerModel(name, phoneNumber, bytes[offset] == 1);
 	}
