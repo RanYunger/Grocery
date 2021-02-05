@@ -1,6 +1,7 @@
 package ID316334473_ID302309513;
 
 import java.io.File;
+import java.util.Map;
 
 import ID316334473_ID302309513.Controllers.MainController;
 import ID316334473_ID302309513.Models.CustomerModel;
@@ -85,7 +86,7 @@ public class UIHandler {
 		media = new Media(new File(path).toURI().toString());
 		mediaPlayer = new MediaPlayer(media);
 
-		mediaPlayer.setCycleCount(audioFileName.equals("WeWillRockYou.mp3") ? mediaPlayer.INDEFINITE : 0);
+//		mediaPlayer.setCycleCount(audioFileName.equals("Shufersal.wav") ? mediaPlayer.INDEFINITE : 0);
 
 		if (isAudioOn)
 			mediaPlayer.play();
@@ -126,11 +127,11 @@ public class UIHandler {
 	}
 
 	public static void showError(Window owner, String message) {
-		showAlert(AlertType.ERROR, owner, "Error", message, "", "OhNo.wav", true);
+		showAlert(AlertType.ERROR, owner, "Error", message, "", "Nope.mp3", true);
 	}
 
 	public static void showError(Window owner, String header, String message) {
-		showAlert(AlertType.ERROR, owner, "Error", header, message, "OhNo.wav", true);
+		showAlert(AlertType.ERROR, owner, "Error", header, message, "Nope.mp3", true);
 	}
 
 	public static void setGeneralFeatures(Stage stage) {
@@ -144,30 +145,30 @@ public class UIHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static TableView<ProductModel> buildProductsTableView() {
-		TableView<ProductModel> tableView = new TableView<ProductModel>();
-		TableColumn<ProductModel, String> productIDTableColumn, productNameTableColumn;
-		TableColumn<ProductModel, Number> productCostPriceTableColumn, productSellingPriceTableColumn,
-				productProfitTableColumn;
+	public static TableView<Map.Entry<String, ProductModel>> buildProductsTableView() {
+		TableView<Map.Entry<String, ProductModel>> tableView = new TableView<Map.Entry<String, ProductModel>>();
+		TableColumn<Map.Entry<String, ProductModel>, String> productIDTableColumn, productNameTableColumn;
+		TableColumn<Map.Entry<String, ProductModel>, Number> productCostPriceTableColumn,
+				productSellingPriceTableColumn, productProfitTableColumn;
 
-		productIDTableColumn = new TableColumn<ProductModel, String>("ID");
-		productIDTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableID());
+		productIDTableColumn = new TableColumn<Map.Entry<String, ProductModel>, String>("ID");
+		productIDTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableID());
 		productIDTableColumn.setMinWidth(150);
 
-		productNameTableColumn = new TableColumn<ProductModel, String>("Name");
-		productNameTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableName());
+		productNameTableColumn = new TableColumn<Map.Entry<String, ProductModel>, String>("Name");
+		productNameTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableName());
 		productNameTableColumn.setMinWidth(150);
 
-		productCostPriceTableColumn = new TableColumn<ProductModel, Number>("Cost Price");
-		productCostPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableCostPrice());
+		productCostPriceTableColumn = new TableColumn<Map.Entry<String, ProductModel>, Number>("Cost Price");
+		productCostPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableCostPrice());
 		productCostPriceTableColumn.setMinWidth(150);
 
-		productSellingPriceTableColumn = new TableColumn<ProductModel, Number>("Selling Price");
-		productSellingPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableSellingPrice());
+		productSellingPriceTableColumn = new TableColumn<Map.Entry<String, ProductModel>, Number>("Selling Price");
+		productSellingPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableSellingPrice());
 		productSellingPriceTableColumn.setMinWidth(150);
 
-		productProfitTableColumn = new TableColumn<ProductModel, Number>("Profit");
-		productProfitTableColumn.setCellValueFactory(cell -> cell.getValue().getObservableProfit());
+		productProfitTableColumn = new TableColumn<Map.Entry<String, ProductModel>, Number>("Profit");
+		productProfitTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableProfit());
 		productProfitTableColumn.setMinWidth(150);
 
 		tableView.getColumns().addAll(productIDTableColumn, productNameTableColumn, productCostPriceTableColumn,

@@ -24,8 +24,6 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	}
 
 	private void setID(String ID) {
-//		if (!ID.matches(ValidPatterns.PRODUCT_ID.getPattern()))
-//			UIHandler.showError(null, "Product's name invalid.");
 		this.id = new SimpleStringProperty(ID);
 	}
 
@@ -38,8 +36,6 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	}
 
 	private void setName(String name) {
-//		if (!name.matches(ValidPatterns.PRODUCT_NAME.getPattern()))
-//			UIHandler.showError(null, "Product's name invalid.");
 		this.name = new SimpleStringProperty(name);
 	}
 
@@ -156,6 +152,61 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 
 		return (4 + (1 + getTextualID().length() + 1)) + (4 + getTextualName().length()) + 8
 				+ (1 + customerLengthInBytes);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((costPrice == null) ? 0 : costPrice.hashCode());
+		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((profit == null) ? 0 : profit.hashCode());
+		result = prime * result + ((sellingPrice == null) ? 0 : sellingPrice.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductModel other = (ProductModel) obj;
+		if (costPrice == null) {
+			if (other.costPrice != null)
+				return false;
+		} else if (!costPrice.equals(other.costPrice))
+			return false;
+		if (customer == null) {
+			if (other.customer != null)
+				return false;
+		} else if (!customer.equals(other.customer))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (profit == null) {
+			if (other.profit != null)
+				return false;
+		} else if (!profit.equals(other.profit))
+			return false;
+		if (sellingPrice == null) {
+			if (other.sellingPrice != null)
+				return false;
+		} else if (!sellingPrice.equals(other.sellingPrice))
+			return false;
+		return true;
 	}
 
 	@Override

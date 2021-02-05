@@ -11,8 +11,8 @@ public class FileHandler implements Iterable<ProductModel> {
 	public final static String PATH = System.getProperty("user.dir") + "\\bin\\products.txt";
 
 	// Fields
-	private RandomAccessFile raf;
-	private long fileOffset;
+	private static RandomAccessFile raf;
+	private static long fileOffset;
 	
 	// Constructors
 	public FileHandler() {
@@ -33,7 +33,7 @@ public class FileHandler implements Iterable<ProductModel> {
 		return false;
 	}
 
-	public long seekProduct(String productID) {
+	public static long seekProduct(String productID) {
 		byte[] buffer = new byte[2 + productID.length()];
 		long prevOffset = fileOffset;
 		String readProductID = null;
@@ -62,7 +62,7 @@ public class FileHandler implements Iterable<ProductModel> {
 		return -1;
 	}
 
-	public ProductModel readProductFromFile() {
+	public static ProductModel readProductFromFile() {
 		byte[] productBytes = null;
 		int productLength;
 
@@ -80,7 +80,7 @@ public class FileHandler implements Iterable<ProductModel> {
 		return null;
 	}
 
-	public void writeProductToFile(ProductModel product) {
+	public static void writeProductToFile(ProductModel product) {
 		byte[] productBytes = product.toByteArray(), restOfBytes = new byte[0];
 		long productOffset = -1, prevLength = 0, diff = 0, bytesToSkip;
 

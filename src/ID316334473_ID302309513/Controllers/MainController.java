@@ -1,9 +1,9 @@
 package ID316334473_ID302309513.Controllers;
 
+import ID316334473_ID302309513.Views.AddProductView;
 import ID316334473_ID302309513.Views.MainView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 
 public class MainController extends WindowController {
 	// Constants
@@ -28,7 +28,8 @@ public class MainController extends WindowController {
 		EventHandler<ActionEvent> addProductButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				AddProductView addProductView = new AddProductView();
+				AddProductController addProductController = new AddProductController(addProductView);
 			}
 		};
 		EventHandler<ActionEvent> removeLastProductButtonEventHandler = new EventHandler<ActionEvent>() {

@@ -1,8 +1,6 @@
 package ID316334473_ID302309513.Models;
 
 import ID316334473_ID302309513.ByteConverter;
-import ID316334473_ID302309513.UIHandler;
-import ID316334473_ID302309513.ValidPatterns;
 import javafx.beans.property.SimpleStringProperty;
 
 public class CustomerModel implements iByteable {
@@ -23,8 +21,6 @@ public class CustomerModel implements iByteable {
 	}
 
 	private void setName(String name) {
-//		if (!name.matches(ValidPatterns.CUSTOMER_FULL_NAME.getPattern()))
-//			UIHandler.showError(null, "CustomerModel's name invalid.");
 		this.name = new SimpleStringProperty(name);
 	}
 
@@ -37,8 +33,6 @@ public class CustomerModel implements iByteable {
 	}
 
 	private void setPhoneNumber(String PhoneNumber) {
-//		if (!PhoneNumber.matches(ValidPatterns.CUSTOMER_PHONE_NUMBER.getPattern()))
-//			UIHandler.showError(null, "CustomerModel's phone Number invalid.");
 		this.phoneNumber = new SimpleStringProperty(PhoneNumber);
 	}
 
@@ -63,11 +57,6 @@ public class CustomerModel implements iByteable {
 
 	// Methods
 	@Override
-	public String toString() {
-		return String.format("Customer [Name:%s Phone:%s]", getTextualName(), getTextualPhoneNumber());
-	}
-
-	@Override
 	public byte[] toByteArray() {
 		byte[] customerBytes = new byte[getLengthInBytes()], bufferBytes = null;
 		int currentOffset = 0;
@@ -91,5 +80,44 @@ public class CustomerModel implements iByteable {
 	@Override
 	public int getLengthInBytes() {
 		return (4 + getTextualName().length()) + 10 + 1;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (interestedInUpdates ? 1231 : 1237);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CustomerModel other = (CustomerModel) obj;
+		if (interestedInUpdates != other.interestedInUpdates)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Customer [Name:%s Phone:%s]", getTextualName(), getTextualPhoneNumber());
 	}
 }

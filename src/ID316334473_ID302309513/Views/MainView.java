@@ -1,10 +1,16 @@
 package ID316334473_ID302309513.Views;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+
+import ID316334473_ID302309513.FileHandler;
 import ID316334473_ID302309513.UIHandler;
 import ID316334473_ID302309513.Models.CustomerModel;
 import ID316334473_ID302309513.Models.ProductModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -23,9 +29,9 @@ public class MainView extends WindowView {
 	private VBox buttonsVBox;
 	private Button addProductButton, removeLastProductButton, removeProductByIDButton, removeAllProductsButton,
 			notifyCustomersButton;
-	private ObservableList<ProductModel> allProducts;
+	private ObservableMap<String, ProductModel> allProducts;
 	private ObservableList<CustomerModel> allCustomers;
-	private TableView<ProductModel> productsTableView;
+	private TableView<Map.Entry<String, ProductModel>> productsTableView;
 	private TableView<CustomerModel> customersTableView;
 
 	// Properties (Getters and Setters)
@@ -49,7 +55,7 @@ public class MainView extends WindowView {
 		return notifyCustomersButton;
 	}
 
-	public ObservableList<ProductModel> getAllProducts() {
+	public ObservableMap<String, ProductModel> getAllProducts() {
 		return allProducts;
 	}
 
@@ -57,7 +63,7 @@ public class MainView extends WindowView {
 		return allCustomers;
 	}
 
-	public TableView<ProductModel> getProductsTableView() {
+	public TableView<Map.Entry<String, ProductModel>> getProductsTableView() {
 		return productsTableView;
 	}
 
@@ -82,7 +88,7 @@ public class MainView extends WindowView {
 	// Methods
 	@Override
 	protected void buildScene() {
-		double sceneWidth = 1500, sceneHeight = 700, backgroundFontSize = 50, viewFontSize = 30;
+		double sceneWidth = 1500, sceneHeight = 700, backgroundFontSize = 50;
 
 		hBox = new HBox();
 		tableViewsHBox = new HBox();
@@ -128,7 +134,7 @@ public class MainView extends WindowView {
 		UIHandler.setGeneralFeatures(stage);
 
 		stage.show();
-		UIHandler.playAudio("Cha-Ching.wav");
+		UIHandler.playAudio("Shufersal.wav");
 	}
 
 	@Override
@@ -142,16 +148,37 @@ public class MainView extends WindowView {
 	}
 
 	public void readAllProducts() {
-		allProducts = FXCollections.observableArrayList();
+		FileHandler fileHandler = new FileHandler();
+		Iterator<ProductModel> it = fileHandler.iterator();
+		ProductModel currentProduct = null;
+
+		allProducts = FXCollections.observableMap(new TreeMap<String, ProductModel>());
 		allCustomers = FXCollections.observableArrayList();
 
-		// TODO: COMPLETE
-
-		productsTableView.setItems(allProducts);
-		customersTableView.setItems(allCustomers);
+		while (it.hasNext()) {
+			currentProduct = it.next();
+			if (!allProducts.containsKey(currentProduct.getTextualID()))
+				addProduct(currentProduct);
+		}
 	}
 
 	public void writeAllProducts() {
-		// TODO: COMPLETE
+		for (ProductModel product : allProducts.values())
+			FileHandler.writeProductToFile(product);
+	}
+
+	public void addProduct(ProductModel product) {
+		CustomerModel currentCustomer = product.getCustomer();
+
+		allProducts.put(product.getTextualID(), product);
+		if ((currentCustomer != null) && (!allCustomers.contains(currentCustomer)))
+			allCustomers.add(currentCustomer);
+
+		productsTableView.setItems(FXCollections.observableArrayList(allProducts.entrySet()));
+		customersTableView.setItems(allCustomers);
+	}
+
+	public void removeProduct(ProductModel product) {
+		allProducts.remove(product.getTextualID());
 	}
 }

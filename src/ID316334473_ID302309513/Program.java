@@ -12,8 +12,10 @@ public class Program extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		if (FileHandler.isFileReady()) {
-			MainView mainView = new MainView(primaryStage);
-			MainController mainController = new MainController(mainView);
+			MainView mainView = new MainView();
+
+			UIHandler.setMainView(mainView);
+			UIHandler.setMainController(new MainController(mainView));
 		} else {
 			EntryView entryView = new EntryView(primaryStage);
 			EntryController entryController = new EntryController(entryView);
@@ -26,17 +28,21 @@ public class Program extends Application {
 }
 
 // FOR DEBUG PURPOSES (WILL BE DELETED)
-//CustomerModel ranCust = new CustomerModel("Ran", "052-8934721", true),
-//		nattyCust = new CustomerModel("Natty", "052-1894325", false);
-//ProductModel wP1 = new ProductModel("1", "milk", 3, 4, ranCust),
-//		wP2 = new ProductModel("2", "eggs", 10, 12, null),
-//		wP3 = new ProductModel("3", "yogurt", 50, 55, nattyCust),
-//		wP4 = new ProductModel("4", "chocolate", 13, 15, null);
+//CustomerModel ranCust = new CustomerModel("Ran", "0528934721", true),
+//		nattyCust = new CustomerModel("Natty", "0521894325", false);
+//ProductModel wP1 = new ProductModel("1", "Milk", 3, 4, ranCust),
+//		wP2 = new ProductModel("2", "Eggs", 10, 12, ranCust),
+//		wP3 = new ProductModel("3", "Yogurt", 50, 55, nattyCust),
+//		wP4 = new ProductModel("4", "Chocolate", 13, 15, null),
+//		wP5 = new ProductModel("4", "Meat", 13, 15, null),
+//		wP6 = new ProductModel("4", "Vegetables", 13, 15, nattyCust);
 //
 //fileHandler.writeProductToFile(wP1);
 //fileHandler.writeProductToFile(wP2);
 //fileHandler.writeProductToFile(wP3);
 //fileHandler.writeProductToFile(wP4);
+//fileHandler.writeProductToFile(wP5);
+//fileHandler.writeProductToFile(wP6);
 //
 //ProductModel currProduct = null;
 //Iterator<ProductModel> it = fileHandler.iterator();
