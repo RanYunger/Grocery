@@ -74,7 +74,8 @@ public class AddProductController extends WindowController {
 				UIHandler.getMainView()
 						.addProduct(new ProductModel(productID, productName, costPrice, sellingPrice, customer));
 				addProductView.close();
-				UIHandler.showSuccess(UIHandler.getMainView().getStage(), "A new product was added successfully!", true);
+				UIHandler.showSuccess(UIHandler.getMainView().getStage(), "A new product was added successfully!",
+						true);
 			}
 		};
 

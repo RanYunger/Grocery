@@ -13,7 +13,7 @@ public class FileHandler implements Iterable<ProductModel> {
 	// Fields
 	private static RandomAccessFile raf;
 	private static long fileOffset;
-	
+
 	// Constructors
 	public FileHandler() {
 		fileOffset = 00;
@@ -55,6 +55,7 @@ public class FileHandler implements Iterable<ProductModel> {
 				fileOffset++;
 			}
 			fileOffset = prevOffset;
+			
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
@@ -67,6 +68,9 @@ public class FileHandler implements Iterable<ProductModel> {
 		int productLength;
 
 		try {
+			if (raf.length() == 0)
+				return null;
+
 			productLength = raf.readInt();
 			productBytes = new byte[productLength];
 			raf.read(productBytes);
@@ -80,26 +84,39 @@ public class FileHandler implements Iterable<ProductModel> {
 		return null;
 	}
 
-	public static void writeProductToFile(ProductModel product) {
-		byte[] productBytes = product.toByteArray(), restOfBytes = new byte[0];
-		long productOffset = -1, prevLength = 0, diff = 0, bytesToSkip;
+	public static void writeProductToFile(ProductModel productToWrite, int sortOption) {
+		byte[] productBytes = productToWrite.toByteArray(), restOfBytes = new byte[0];
+		long writingOffset = -1, prevLength = 0, diff = 0, bytesToSkip;
+		ProductModel currentReadProduct = null;
 
 		try {
 			raf = new RandomAccessFile(PATH, "rw");
-			productOffset = seekProduct(product.getTextualID());
+			writingOffset = seekProduct(productToWrite.getTextualID());
 			prevLength = raf.length();
 
 			// Overwriting the product
-			if (productOffset != -1) {
-				raf.seek(productOffset);
+			if ((writingOffset != -1)) {// || (sortOption == 2)) {
+				raf.seek(writingOffset != -1 ? writingOffset : fileOffset);
 				bytesToSkip = raf.readInt();
 				diff = productBytes.length - bytesToSkip;
 				raf.skipBytes((int) bytesToSkip);
 				restOfBytes = new byte[(int) (raf.length() - raf.getFilePointer())];
 				raf.read(restOfBytes);
+			} else {
+				writingOffset = raf.length();
+				currentReadProduct = readProductFromFile();
+				while (currentReadProduct != null) {
+					if (productToWrite.compareTo(currentReadProduct, sortOption) > 0) // ID Ascending / Descending
+					{
+						writingOffset = seekProduct(productToWrite.getTextualID());
+						break;
+					}
+
+					currentReadProduct = readProductFromFile();
+				}
 			}
 
-			raf.seek(productOffset != -1 ? productOffset : prevLength);
+			raf.seek(writingOffset);
 			raf.writeInt(productBytes.length);
 			raf.write(productBytes);
 			raf.write(restOfBytes);

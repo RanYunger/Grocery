@@ -77,18 +77,19 @@ public class EntryController extends WindowController {
 						break;
 					}
 				if (sortOption < 0) {
-					UIHandler.showError(entryView.getStage(), "Please Choose a sorting method");
+					UIHandler.showError(entryView.getStage(), "Choose sorting method");
 					return;
 				}
 
 				MainView mainView = new MainView();
-				MainController mainController = new MainController(mainView, sortOption);
+				MainController mainController = new MainController(mainView);
 
 				UIHandler.setMainView(mainView);
 				UIHandler.setMainController(mainController);
+				UIHandler.setSortOption(sortOption);
 
 				entryView.close();
-				mainController.addEventHandlersToGeneralButtons();
+				mainController.addEventHandlersToGeneralButtons();				
 			}
 		};
 

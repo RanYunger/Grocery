@@ -1,6 +1,8 @@
 package ID316334473_ID302309513.Views;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -32,9 +34,10 @@ public class MainView extends WindowView {
 	private VBox productsVBox, customersVBox, buttonsVBox;
 	private Label productsLabel, customersLabel, totalProfitLabel;
 	private TextField totalProfitTextField;
-	private Button addProductButton, removeLastProductButton, removeProductByIDButton, removeAllProductsButton,
+	private Button addProductButton, removeLastProductButton, removeSelectedProductButton, removeAllProductsButton,
 			notifyCustomersButton;
-	private ObservableMap<String, ProductModel> allProducts;
+	private LinkedHashMap<String, ProductModel> allProductsUnsorted;
+	private ObservableMap<String, ProductModel> allProductsSorted;
 	private ObservableList<CustomerModel> allCustomers;
 	private TableView<Map.Entry<String, ProductModel>> productsTableView;
 	private TableView<CustomerModel> customersTableView;
@@ -48,8 +51,8 @@ public class MainView extends WindowView {
 		return removeLastProductButton;
 	}
 
-	public Button getRemoveProductByIDButton() {
-		return removeProductByIDButton;
+	public Button getRemoveSelectedProductButton() {
+		return removeSelectedProductButton;
 	}
 
 	public Button getRemoveAllProductsButton() {
@@ -60,8 +63,12 @@ public class MainView extends WindowView {
 		return notifyCustomersButton;
 	}
 
-	public ObservableMap<String, ProductModel> getAllProducts() {
-		return allProducts;
+	public LinkedHashMap<String, ProductModel> getAllProductsUnorted() {
+		return allProductsUnsorted;
+	}
+
+	public ObservableMap<String, ProductModel> getAllProductsSorted() {
+		return allProductsSorted;
 	}
 
 	public ObservableList<CustomerModel> getAllCustomers() {
@@ -107,7 +114,7 @@ public class MainView extends WindowView {
 		totalProfitTextField = new TextField();
 		addProductButton = new Button("Add Product");
 		removeLastProductButton = new Button("Undo");
-		removeProductByIDButton = new Button("Remove Product By ID");
+		removeSelectedProductButton = new Button("Remove Selected Product");
 		removeAllProductsButton = new Button("Remove All Products");
 		notifyCustomersButton = new Button("Notify Customers");
 		productsTableView = UIHandler.buildProductsTableView();
@@ -128,7 +135,7 @@ public class MainView extends WindowView {
 		totalProfitTextField.setEditable(false);
 		addProductButton.setMinWidth(150);
 		removeLastProductButton.setMinWidth(150);
-		removeProductByIDButton.setMinWidth(150);
+		removeSelectedProductButton.setMinWidth(150);
 		removeAllProductsButton.setMinWidth(150);
 		notifyCustomersButton.setMinWidth(150);
 		productsTableView.setOpacity(0.7);
@@ -143,7 +150,7 @@ public class MainView extends WindowView {
 		VBox.setMargin(productsLabel, new Insets(0, 0, 0, 0));
 		VBox.setMargin(productsTableView, new Insets(10, 0, 10, 0));
 		VBox.setMargin(totalProfitHBox, new Insets(10, 0, 0, 0));
-		
+
 		customersVBox.getChildren().addAll(customersLabel, customersTableView);
 		VBox.setMargin(customersLabel, new Insets(0, 0, 0, 0));
 		VBox.setMargin(customersTableView, new Insets(10, 0, 0, 0));
@@ -152,11 +159,11 @@ public class MainView extends WindowView {
 		HBox.setMargin(productsVBox, new Insets(0, 10, 0, 0));
 		HBox.setMargin(customersVBox, new Insets(0, 0, 0, 10));
 
-		buttonsVBox.getChildren().addAll(addProductButton, removeLastProductButton, removeProductByIDButton,
+		buttonsVBox.getChildren().addAll(addProductButton, removeLastProductButton, removeSelectedProductButton,
 				removeAllProductsButton, notifyCustomersButton);
 		VBox.setMargin(addProductButton, new Insets(0, 0, 10, 0));
 		VBox.setMargin(removeLastProductButton, new Insets(10, 0, 10, 0));
-		VBox.setMargin(removeProductByIDButton, new Insets(10, 0, 10, 0));
+		VBox.setMargin(removeSelectedProductButton, new Insets(10, 0, 10, 0));
 		VBox.setMargin(removeAllProductsButton, new Insets(10, 0, 10, 0));
 		VBox.setMargin(notifyCustomersButton, new Insets(10, 0, 0, 0));
 
@@ -170,6 +177,8 @@ public class MainView extends WindowView {
 		UIHandler.setGeneralFeatures(stage);
 
 		stage.show();
+
+		UIHandler.playAudio("Shufersal.wav");
 	}
 
 	@Override
@@ -178,7 +187,7 @@ public class MainView extends WindowView {
 
 		UIHandler.addCursorEffectsToNode(addProductButton);
 		UIHandler.addCursorEffectsToNode(removeLastProductButton);
-		UIHandler.addCursorEffectsToNode(removeProductByIDButton);
+		UIHandler.addCursorEffectsToNode(removeSelectedProductButton);
 		UIHandler.addCursorEffectsToNode(removeAllProductsButton);
 		UIHandler.addCursorEffectsToNode(notifyCustomersButton);
 	}
@@ -189,44 +198,66 @@ public class MainView extends WindowView {
 	}
 
 	public void readAllProducts() {
+		int sortOption = UIHandler.getSortOption();
 		FileHandler fileHandler = new FileHandler();
-		Iterator<ProductModel> it = fileHandler.iterator();
+		Iterator<ProductModel> iterator = fileHandler.iterator();
 		ProductModel currentProduct = null;
-
-		allProducts = FXCollections.observableMap(new TreeMap<String, ProductModel>());
-		allCustomers = FXCollections.observableArrayList();
-
-		while (it.hasNext()) {
-			currentProduct = it.next();
-			if (!allProducts.containsKey(currentProduct.getTextualID()))
-				addProduct(currentProduct);
-		}
-	}
-
-	public void writeAllProducts() {
-		for (ProductModel product : allProducts.values())
-			FileHandler.writeProductToFile(product);
-	}
-
-	public void addProduct(ProductModel product) {
-		Iterator<ProductModel> iterator = null;
-		CustomerModel currentCustomer = product.getCustomer();
+		CustomerModel currentCustomer = null;
 		int totalProfit = 0;
 
-		allProducts.put(product.getTextualID(), product);
-		if ((currentCustomer != null) && (!allCustomers.contains(currentCustomer)))
-			allCustomers.add(currentCustomer);
+		if (sortOption == 2)
+			allProductsUnsorted = new LinkedHashMap<String, ProductModel>();
+		else {
+			TreeMap<String, ProductModel> littleShitty = sortOption == 0 ? new TreeMap<String, ProductModel>()
+					: new TreeMap<String, ProductModel>(Collections.reverseOrder());
 
-		iterator = allProducts.values().iterator();
-		while (iterator.hasNext())
-			totalProfit += iterator.next().getNumericProfit();
+			allProductsSorted = FXCollections.observableMap(littleShitty);
+		}
+		allCustomers = FXCollections.observableArrayList();
 
-		productsTableView.setItems(FXCollections.observableArrayList(allProducts.entrySet()));
+		while (iterator.hasNext()) {
+			currentProduct = iterator.next();
+			totalProfit += currentProduct.getNumericProfit();
+			if (sortOption == 2)
+				allProductsUnsorted.put(currentProduct.getTextualID(), currentProduct);
+			else
+				allProductsSorted.put(currentProduct.getTextualID(), currentProduct);
+			currentCustomer = currentProduct.getCustomer();
+			if (currentCustomer != null)
+				allCustomers.add(currentCustomer);
+		}
+
+		productsTableView.setItems(FXCollections
+				.observableArrayList(sortOption == 2 ? allProductsUnsorted.entrySet() : allProductsSorted.entrySet()));
 		customersTableView.setItems(allCustomers);
 		totalProfitTextField.setText("" + totalProfit);
 	}
 
+	public void writeAllProducts() {
+		// TODO: COMPLETE (might be unneccesary)
+	}
+
+	public void addProduct(ProductModel product) {
+		FileHandler.writeProductToFile(product, UIHandler.getSortOption());
+
+		readAllProducts();
+	}
+
 	public void removeProduct(ProductModel product) {
-		allProducts.remove(product.getTextualID());
+		FileHandler fileHandler = new FileHandler();
+		Iterator<ProductModel> iterator = fileHandler.iterator();
+		int sortOption = UIHandler.getSortOption();
+		String productID = product.getTextualID();
+
+		// TODO: Fix (Check if raf open before seeking)
+		FileHandler.seekProduct(productID);
+		iterator.remove();
+		
+		if (sortOption == 2)
+			allProductsUnsorted.remove(productID);
+		else
+			allProductsSorted.remove(productID);
+
+		readAllProducts();
 	}
 }

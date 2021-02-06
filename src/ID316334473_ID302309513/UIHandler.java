@@ -1,7 +1,9 @@
 package ID316334473_ID302309513;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
 
 import ID316334473_ID302309513.Controllers.MainController;
 import ID316334473_ID302309513.Models.CustomerModel;
@@ -14,6 +16,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,6 +39,8 @@ public class UIHandler {
 	// Fields
 	private static MainController mainController;
 	private static MainView mainView;
+	private static int sortOption; // 0 = ID Ascending, 1 = ID Descending, 2 = Insertion Order
+	private static Comparator<ProductModel> comparator;
 
 	private static boolean isAudioOn = true;
 	private static MediaPlayer mediaPlayer;
@@ -56,6 +61,28 @@ public class UIHandler {
 
 	public static void setMainView(MainView mainView) {
 		UIHandler.mainView = mainView;
+	}
+
+	public static int getSortOption() {
+		return sortOption;
+	}
+
+	public static void setSortOption(int sortOption) {
+		UIHandler.sortOption = sortOption < 0 ? 0 : sortOption;
+		setComparator(new Comparator<ProductModel>() {
+			@Override
+			public int compare(ProductModel o1, ProductModel o2) {
+				return o1.compareTo(o2);
+			}
+		});
+	}
+
+	public static Comparator<ProductModel> getComparator() {
+		return comparator;
+	}
+
+	private static void setComparator(Comparator<ProductModel> comparator) {
+		UIHandler.comparator = comparator;
 	}
 
 	public static boolean isAudioOn() {
@@ -89,8 +116,8 @@ public class UIHandler {
 			mediaPlayer.play();
 	}
 
-	private static void showAlert(AlertType alertType, Window owner, String title, String header, String message,
-			String audioFileName, boolean showAndWait) {
+	private static Optional<ButtonType> showAlert(AlertType alertType, Window owner, String title, String header,
+			String message, String audioFileName, boolean showAndWait) {
 		Alert alert = new Alert(alertType);
 
 		alert.initOwner(owner);
@@ -106,13 +133,20 @@ public class UIHandler {
 			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
 		}
 
+		if (alertType == AlertType.CONFIRMATION) {
+			alert.getButtonTypes().clear();
+			alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+		}
+
 		if (!audioFileName.isBlank())
 			playAudio(audioFileName);
 
 		if (showAndWait)
-			alert.showAndWait();
-		else
-			alert.show();
+			return alert.showAndWait();
+
+		alert.show();
+
+		return null;
 	}
 
 	public static void showSuccess(Window owner, String message, boolean hasAudio) {
@@ -129,6 +163,11 @@ public class UIHandler {
 
 	public static void showError(Window owner, String header, String message) {
 		showAlert(AlertType.ERROR, owner, "Error", header, message, "Nope.mp3", true);
+	}
+
+	public static Optional<ButtonType> showConfirmation(Window owner, String message) {
+		return showAlert(AlertType.CONFIRMATION, owner, "Confirmation", "Are You Sure?", message, "AreYouSure.wav",
+				true);
 	}
 
 	public static void setGeneralFeatures(Stage stage) {
@@ -175,7 +214,7 @@ public class UIHandler {
 			tableColumn.setStyle("-fx-alignment: CENTER;");
 			tableColumn.setEditable(false);
 			tableColumn.setReorderable(false);
-			tableColumn.setSortable(false);
+			tableColumn.setSortable(tableColumn.equals(productIDTableColumn));
 			tableColumn.setResizable(false);
 		}
 
@@ -220,14 +259,13 @@ public class UIHandler {
 		ImageView backgroundImage = buildImage(backgroundImageName, width, height),
 				audioImageView = buildImage(isAudioOn ? "AudioOn.png" : "AudioOff.png", imageHeight, imageHeight);
 		VBox topVBox = new VBox();
-		Text creatorText = new Text("Ran & Natty's"), topText = new Text("Shufersal™"),
+		Text creatorText = new Text("Ran & Natty's"), topText = new Text("Not Shufersal™"),
 				bottomText = new Text("We're so getting sued");
 		StackPane stackPane = new StackPane();
 
 		topVBox.setAlignment(Pos.CENTER);
 		creatorText.setFont(new Font(20));
 		topText.setFont(new Font(fontSize));
-		topText.setStrikethrough(true);
 		bottomText.setFont(new Font(fontSize));
 
 		topVBox.getChildren().addAll(creatorText, topText);

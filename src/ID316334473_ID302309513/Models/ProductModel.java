@@ -8,13 +8,19 @@ import javafx.beans.property.SimpleStringProperty;
 public class ProductModel implements Comparable<ProductModel>, iByteable {
 	// Constants
 	public static final int NO_PRICE = 0, FIRST_QUEUE_NUMBER = 1;
+	private static int QUEUE_GENERATOR = FIRST_QUEUE_NUMBER;
 
 	// Fields
+	private int queueNumber;
 	private SimpleStringProperty id, name;
 	private SimpleIntegerProperty costPrice, sellingPrice, profit;
 	private CustomerModel customer;
 
 	// Properties (Getters and Setters)
+	public int getQueueNumber() {
+		return queueNumber;
+	}
+
 	public SimpleStringProperty getObservableID() {
 		return id;
 	}
@@ -94,6 +100,7 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	}
 
 	public ProductModel(String ID, String name, int costPrice, int sellingPrice, CustomerModel customer) {
+		queueNumber = QUEUE_GENERATOR++;
 		setID(ID);
 		setName(name);
 		setCostPrice(costPrice);
@@ -105,7 +112,16 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 	// Methods
 	@Override
 	public int compareTo(ProductModel other) {
-		return getTextualID().compareTo(other.getTextualID());
+		return compareTo(other, UIHandler.getSortOption());
+	}
+
+	public int compareTo(ProductModel other, int sortOption) {
+		if (sortOption == 2) // Insertion Order
+			return queueNumber - other.getQueueNumber();
+
+		int thisNumericID = Integer.parseInt(getTextualID()), otherNumericID = Integer.parseInt(other.getTextualID());
+
+		return sortOption == 1 ? thisNumericID - otherNumericID : otherNumericID - thisNumericID;
 	}
 
 	@Override

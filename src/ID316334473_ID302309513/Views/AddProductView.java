@@ -150,6 +150,7 @@ public class AddProductView extends WindowView {
 		costPriceSpinner.editorProperty().get().setAlignment(Pos.CENTER);
 		sellingPriceSpinner.setMinWidth(200);
 		sellingPriceSpinner.editorProperty().get().setAlignment(Pos.CENTER);
+		interestedCheckBox.setSelected(true);
 		submitButton.setFont(new Font(viewFontSize));
 
 		productIDHBox.getChildren().addAll(productIDLabel, productIDTextField);

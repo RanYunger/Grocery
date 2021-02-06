@@ -15,10 +15,10 @@ public class Program extends Application {
 			MainView mainView = new MainView();
 			MainController mainController = new MainController(mainView);
 
-			UIHandler.playAudio("Shufersal.wav");
 			mainController.addEventHandlersToGeneralButtons();
 			UIHandler.setMainView(mainView);
 			UIHandler.setMainController(mainController);
+			UIHandler.setSortOption(2); // Insertion Order
 		} else {
 			EntryView entryView = new EntryView(primaryStage);
 			EntryController entryController = new EntryController(entryView);
