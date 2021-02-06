@@ -1,5 +1,6 @@
 package ID316334473_ID302309513.Views;
 
+import ID316334473_ID302309513.UIHandler;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -44,8 +45,10 @@ public abstract class WindowView extends View {
 			currentNode = rootNodes.get(i);
 			if (currentNode instanceof ImageView) {
 				imageViewNode = (ImageView) currentNode;
-				if (imageViewNode.getImage().getUrl().contains("Audio"))
+				if (imageViewNode.getImage().getUrl().contains("Audio")) {
 					setAudioImageView(imageViewNode);
+					UIHandler.addCursorEffectsToNode(imageViewNode);
+				}
 			}
 		}
 	}

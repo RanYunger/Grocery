@@ -14,7 +14,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -75,7 +75,6 @@ public class UIHandler {
 		node.setOnMouseExited(entered -> node.getScene().setCursor(Cursor.DEFAULT));
 	}
 
-	@SuppressWarnings("static-access")
 	public static void playAudio(String audioFileName) {
 		String path = String.format("%s\\bin\\%s", System.getProperty("user.dir"), audioFileName);
 
@@ -85,8 +84,6 @@ public class UIHandler {
 
 		media = new Media(new File(path).toURI().toString());
 		mediaPlayer = new MediaPlayer(media);
-
-//		mediaPlayer.setCycleCount(audioFileName.equals("Shufersal.wav") ? mediaPlayer.INDEFINITE : 0);
 
 		if (isAudioOn)
 			mediaPlayer.play();
@@ -152,24 +149,25 @@ public class UIHandler {
 				productSellingPriceTableColumn, productProfitTableColumn;
 
 		productIDTableColumn = new TableColumn<Map.Entry<String, ProductModel>, String>("ID");
-		productIDTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableID());
-		productIDTableColumn.setMinWidth(150);
+		productIDTableColumn.setCellValueFactory(cell -> (cell.getValue()).getValue().getObservableID());
+		productIDTableColumn.setMinWidth(140);
 
 		productNameTableColumn = new TableColumn<Map.Entry<String, ProductModel>, String>("Name");
-		productNameTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableName());
-		productNameTableColumn.setMinWidth(150);
+		productNameTableColumn.setCellValueFactory(cell -> (cell.getValue()).getValue().getObservableName());
+		productNameTableColumn.setMinWidth(140);
 
 		productCostPriceTableColumn = new TableColumn<Map.Entry<String, ProductModel>, Number>("Cost Price");
-		productCostPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableCostPrice());
-		productCostPriceTableColumn.setMinWidth(150);
+		productCostPriceTableColumn.setCellValueFactory(cell -> (cell.getValue()).getValue().getObservableCostPrice());
+		productCostPriceTableColumn.setMinWidth(140);
 
 		productSellingPriceTableColumn = new TableColumn<Map.Entry<String, ProductModel>, Number>("Selling Price");
-		productSellingPriceTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableSellingPrice());
-		productSellingPriceTableColumn.setMinWidth(150);
+		productSellingPriceTableColumn
+				.setCellValueFactory(cell -> (cell.getValue()).getValue().getObservableSellingPrice());
+		productSellingPriceTableColumn.setMinWidth(140);
 
 		productProfitTableColumn = new TableColumn<Map.Entry<String, ProductModel>, Number>("Profit");
-		productProfitTableColumn.setCellValueFactory(cell -> cell.getValue().getValue().getObservableProfit());
-		productProfitTableColumn.setMinWidth(150);
+		productProfitTableColumn.setCellValueFactory(cell -> (cell.getValue()).getValue().getObservableProfit());
+		productProfitTableColumn.setMinWidth(140);
 
 		tableView.getColumns().addAll(productIDTableColumn, productNameTableColumn, productCostPriceTableColumn,
 				productSellingPriceTableColumn, productProfitTableColumn);
@@ -222,24 +220,25 @@ public class UIHandler {
 		ImageView backgroundImage = buildImage(backgroundImageName, width, height),
 				audioImageView = buildImage(isAudioOn ? "AudioOn.png" : "AudioOff.png", imageHeight, imageHeight);
 		VBox topVBox = new VBox();
-		Label creatorLabel = new Label("Ran & Natty's"), topLabel = new Label("Grocery™"),
-				bottomLabel = new Label("The only place to purchase shit");
+		Text creatorText = new Text("Ran & Natty's"), topText = new Text("Shufersal™"),
+				bottomText = new Text("We're so getting sued");
 		StackPane stackPane = new StackPane();
 
 		topVBox.setAlignment(Pos.CENTER);
-		creatorLabel.setFont(new Font(20));
-		topLabel.setFont(new Font(fontSize));
-		bottomLabel.setFont(new Font(fontSize));
+		creatorText.setFont(new Font(20));
+		topText.setFont(new Font(fontSize));
+		topText.setStrikethrough(true);
+		bottomText.setFont(new Font(fontSize));
 
-		topVBox.getChildren().addAll(creatorLabel, topLabel);
-		VBox.setMargin(creatorLabel, new Insets(10, 0, 0, 0));
-		VBox.setMargin(topLabel, new Insets(0, 0, -10, 0));
+		topVBox.getChildren().addAll(creatorText, topText);
+		VBox.setMargin(creatorText, new Insets(10, 0, 0, 0));
+		VBox.setMargin(topText, new Insets(0, 0, -10, 0));
 
-		stackPane.getChildren().addAll(backgroundImage, topVBox, bottomLabel, node);
+		stackPane.getChildren().addAll(backgroundImage, topVBox, bottomText, node);
 		stackPane.getChildren().addAll(audioImageView);
 		StackPane.setMargin(audioImageView, new Insets(height, width * 0.95, height * 1.9, 10));
 		StackPane.setMargin(topVBox, new Insets(height * 0.92, 0, height * 1.8, 0));
-		StackPane.setMargin(bottomLabel, new Insets(height * 0.92, 0, height * 0.08, 0));
+		StackPane.setMargin(bottomText, new Insets(height * 0.92, 0, height * 0.08, 0));
 
 		return stackPane;
 	}

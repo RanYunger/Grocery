@@ -13,9 +13,12 @@ public class Program extends Application {
 	public void start(Stage primaryStage) {
 		if (FileHandler.isFileReady()) {
 			MainView mainView = new MainView();
+			MainController mainController = new MainController(mainView);
 
+			UIHandler.playAudio("Shufersal.wav");
+			mainController.addEventHandlersToGeneralButtons();
 			UIHandler.setMainView(mainView);
-			UIHandler.setMainController(new MainController(mainView));
+			UIHandler.setMainController(mainController);
 		} else {
 			EntryView entryView = new EntryView(primaryStage);
 			EntryController entryController = new EntryController(entryView);

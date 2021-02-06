@@ -30,6 +30,8 @@ public class MainController extends WindowController {
 			public void handle(ActionEvent event) {
 				AddProductView addProductView = new AddProductView();
 				AddProductController addProductController = new AddProductController(addProductView);
+				
+				addProductController.addEventHandlersToGeneralButtons();
 			}
 		};
 		EventHandler<ActionEvent> removeLastProductButtonEventHandler = new EventHandler<ActionEvent>() {
