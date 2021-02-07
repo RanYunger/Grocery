@@ -139,7 +139,7 @@ public class AddProductView extends WindowView {
 		interestedLabel.setFont(new Font(viewFontSize));
 		interestedLabel.setTextFill(Color.WHITE);
 		productIDTextField.setMinWidth(200);
-		productIDTextField.setTooltip(new Tooltip("Format: 4 digits"));
+		productIDTextField.setTooltip(new Tooltip("Format: 3 Capital letters + 3 digits (i.e. ABC123)"));
 		productNameTextField.setMinWidth(200);
 		productNameTextField.setTooltip(new Tooltip("Format: One capitalized word (i.e. Milk)"));
 		customerNameTextField.setMinWidth(200);

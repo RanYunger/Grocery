@@ -53,20 +53,20 @@ public class AddProductController extends WindowController {
 
 				// Validations
 				if (!productID.matches(ValidPatterns.PRODUCT_ID.getPattern())) {
-					UIHandler.showError(addProductView.getStage(), "Invalid Product ID!");
+					UIHandler.showError(addProductView.getStage(), "Invalid Product ID!", productIDTextField.getTooltip().getText());
 					return;
 				}
 				if (!productName.matches(ValidPatterns.PRODUCT_NAME.getPattern())) {
-					UIHandler.showError(addProductView.getStage(), "Invalid Product Name!");
+					UIHandler.showError(addProductView.getStage(), "Invalid Product Name!", productNameTextField.getTooltip().getText());
 					return;
 				}
 				if ((!customerName.isBlank()) && (!phoneNumber.isBlank())) {
 					if (!customerName.matches(ValidPatterns.CUSTOMER_FULL_NAME.getPattern())) {
-						UIHandler.showError(addProductView.getStage(), "Invalid Customer Name!");
+						UIHandler.showError(addProductView.getStage(), "Invalid Customer Name!", customerNameTextField.getTooltip().getText());
 						return;
 					}
 					if (!phoneNumber.matches(ValidPatterns.CUSTOMER_PHONE_NUMBER.getPattern())) {
-						UIHandler.showError(addProductView.getStage(), "Invalid Phone Number!");
+						UIHandler.showError(addProductView.getStage(), "Invalid Phone Number!", phoneNumberTextField.getTooltip().getText());
 						return;
 					}
 					customer = new CustomerModel(customerName, phoneNumber, interestedCheckBox.isSelected());

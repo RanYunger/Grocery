@@ -77,7 +77,7 @@ public class EntryController extends WindowController {
 						break;
 					}
 				if (sortOption < 0) {
-					UIHandler.showError(entryView.getStage(), "Choose sorting method");
+					UIHandler.showError(entryView.getStage(), "Choose sorting method", "");
 					return;
 				}
 

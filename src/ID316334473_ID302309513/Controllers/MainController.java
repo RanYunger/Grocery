@@ -10,6 +10,7 @@ import ID316334473_ID302309513.Models.Commands.RemoveProductCommand;
 import ID316334473_ID302309513.Models.Commands.UndoCommand;
 import ID316334473_ID302309513.Views.AddProductView;
 import ID316334473_ID302309513.Views.MainView;
+import ID316334473_ID302309513.Views.NotifyCustomersView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ButtonType;
@@ -54,12 +55,17 @@ public class MainController extends WindowController {
 				Optional<ButtonType> userChoice = null;
 
 				if (productsTableView.getSelectionModel().getSelectedIndex() == -1)
-					UIHandler.showError(mainView.getStage(), "Choose a product to remove");
+					UIHandler.showError(mainView.getStage(), "Choose a product to remove", "");
 				else {
 					selectedProduct = productsTableView.getSelectionModel().getSelectedItem().getValue();
-					userChoice = UIHandler.showConfirmation(mainView.getStage(), "Nothing special here. GTF back up!");
-					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES))
+					userChoice = UIHandler.showConfirmation(mainView.getStage(),
+							"Look, Ran, another idiot fell for that... (¬_¬)ﾉ( ^_^)／");
+					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
 						new RemoveProductCommand(selectedProduct).execute();
+						UIHandler.showSuccess(mainView.getStage(),
+								String.format("Product #%s removed successfuly!", selectedProduct.getTextualID()),
+								true);
+					}
 				}
 			}
 		};
@@ -67,19 +73,49 @@ public class MainController extends WindowController {
 			@Override
 			public void handle(ActionEvent event) {
 				Optional<ButtonType> userChoice = UIHandler.showConfirmation(mainView.getStage(),
-						"Nothing special here. GTF back up!");
+						"Look, Ran, another idiot fell for that... (¬_¬)ﾉ( ^_^)／");
 
 				if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
 					new RemoveAllProductsCommand().execute();
 					UIHandler.showFatalError(UIHandler.getMainView().getStage(), "Everything is gone!",
-							"NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!");
+							"─▄▀▀▀▀▄─█──█────▄▀▀█─▄▀▀▀▀▄─█▀▀▄\r\n" + "─█────█─█──█────█────█────█─█──█\r\n"
+									+ "─█────█─█▀▀█────█─▄▄─█────█─█──█\r\n" + "─▀▄▄▄▄▀─█──█────▀▄▄█─▀▄▄▄▄▀─█▄▄▀\r\n"
+									+ "\r\n" + "─────────▄██████▀▀▀▀▀▀▄\r\n" + "─────▄█████████▄───────▀▀▄▄\r\n"
+									+ "──▄█████████████───────────▀▀▄\r\n" + "▄██████████████─▄▀───▀▄─▀▄▄▄──▀▄\r\n"
+									+ "███████████████──▄▀─▀▄▄▄▄▄▄────█\r\n" + "█████████████████▀█──▄█▄▄▄──────█\r\n"
+									+ "███████████──█▀█──▀▄─█─█─█───────█\r\n"
+									+ "████████████████───▀█─▀██▄▄──────█\r\n"
+									+ "█████████████████──▄─▀█▄─────▄───█\r\n"
+									+ "█████████████████▀███▀▀─▀▄────█──█\r\n"
+									+ "████████████████──────────█──▄▀──█\r\n"
+									+ "████████████████▄▀▀▀▀▀▀▄──█──────█\r\n"
+									+ "████████████████▀▀▀▀▀▀▀▄──█──────█\r\n"
+									+ "▀████████████████▀▀▀▀▀▀──────────█\r\n" + "──███████████████▀▀─────█──────▄▀\r\n"
+									+ "──▀█████████████────────█────▄▀\r\n" + "────▀████████████▄───▄▄█▀─▄█▀\r\n"
+									+ "──────▀████████████▀▀▀──▄███\r\n" + "──────████████████████████─█\r\n"
+									+ "─────████████████████████──█\r\n" + "────████████████████████───█\r\n"
+									+ "────██████████████████─────█\r\n" + "────██████████████████─────█\r\n"
+									+ "────██████████████████─────█\r\n" + "────██████████████████─────█\r\n"
+									+ "────██████████████████▄▄▄▄▄█\r\n" + "\r\n"
+									+ "─────────────█─────█─█──█─█───█\r\n" + "─────────────█─────█─█──█─▀█─█▀\r\n"
+									+ "─────────────█─▄█▄─█─█▀▀█──▀█▀\r\n" + "─────────────██▀─▀██─█──█───█");
 				}
 			}
 		};
 		EventHandler<ActionEvent> notifyCustomersButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				if (mainView.getAllCustomers().isEmpty()) {
+					UIHandler.showError(mainView.getStage(), "No customers to notify", "");
+					return;
+				}
+
+				NotifyCustomersView notifyCustomersView = new NotifyCustomersView();
+				NotifyCustomersController notifyCustomersController = new NotifyCustomersController(
+						notifyCustomersView);
+
+				mainView.getNotifyCustomersButton().setDisable(true);
+				notifyCustomersController.addEventHandlersToGeneralButtons();
 			}
 		};
 

@@ -55,7 +55,7 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 
 	private void setCostPrice(int costPrice) {
 		if (costPrice < NO_PRICE)
-			UIHandler.showError(null, "Product's cost price must be a non-negative number.");
+			UIHandler.showError(null, "Product's cost price must be a non-negative number.", "");
 		this.costPrice = new SimpleIntegerProperty(costPrice);
 	}
 
@@ -69,7 +69,7 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 
 	private void setSellingPrice(int sellingPrice) {
 		if (sellingPrice < NO_PRICE)
-			UIHandler.showError(null, "Product's selling price must be a non-negative number.");
+			UIHandler.showError(null, "Product's selling price must be a non-negative number.", "");
 		this.sellingPrice = new SimpleIntegerProperty(sellingPrice);
 	}
 

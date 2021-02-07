@@ -1,19 +1,24 @@
 package ID316334473_ID302309513.Models;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-
 import ID316334473_ID302309513.UIHandler;
+import ID316334473_ID302309513.Models.Commands.NotifyCustomerCommand;
+import ID316334473_ID302309513.Views.NotifyCustomersView;
 import javafx.collections.ObservableList;
 
-public class SenderThreadModel extends Thread {
+public class SenderThreadModel extends Thread implements iSender, iReciever {
 	// Constants
 
 	// Fields
 	private static SenderThreadModel instance;
+
+	private NotifyCustomersView notifyCustomersView;
 	private ObservableList<CustomerModel> recipients;
 
 	// Properties (Getters and Setters)
+	public void setNotifyCustomersView(NotifyCustomersView notifyCustomersView) {
+		this.notifyCustomersView = notifyCustomersView;
+	}
+
 	public ObservableList<CustomerModel> getRecipients() {
 		return recipients;
 	}
@@ -36,20 +41,32 @@ public class SenderThreadModel extends Thread {
 
 	@Override
 	public void run() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String message = "";
 
 		try {
+			Thread.sleep(2000);
+			notifyCustomersView.getLogTextArea().appendText("Ping initiating...\n");
+
 			for (CustomerModel recipient : recipients) {
-				message = String.format("[%s] %s recieved a notification.", LocalTime.now().format(formatter),
-						recipient.getTextualName());
-				// TODO: print message to window (probably huge textbox or something)
 				Thread.sleep(2000);
+				if (recipient.isInterestedInUpdates())
+					new NotifyCustomerCommand(notifyCustomersView, recipient).execute();
 			}
+
+			notifyCustomersView.getLogTextArea().appendText("Done.\n");
 		} catch (InterruptedException ex) {
-			ex.printStackTrace();
+			instance = null; // in order for thread to start again on command
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
+	}
+
+	@Override
+	public void sendMessage(iReciever reciever, String message) {
+		// TODO: COMPLETE
+	}
+
+	@Override
+	public void receiveMessage(iSender sender, String message) {
+		// TODO: COMPLETE
 	}
 }

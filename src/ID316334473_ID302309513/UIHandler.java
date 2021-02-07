@@ -10,6 +10,7 @@ import ID316334473_ID302309513.Models.CustomerModel;
 import ID316334473_ID302309513.Models.ProductModel;
 import ID316334473_ID302309513.Views.MainView;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -23,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -98,8 +100,24 @@ public class UIHandler {
 
 	// Methods
 	public static void addCursorEffectsToNode(Node node) {
-		node.setOnMouseEntered(entered -> node.getScene().setCursor(Cursor.HAND));
-		node.setOnMouseExited(entered -> node.getScene().setCursor(Cursor.DEFAULT));
+		EventHandler<MouseEvent> mouseEnteredEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				node.getScene().setCursor(Cursor.HAND);
+				// TODO: COMPLETE (increase Node size by 1%)
+			}
+		};
+
+		EventHandler<MouseEvent> mouseExiteEventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				node.getScene().setCursor(Cursor.DEFAULT);
+				// TODO: COMPLETE (return node to its original size)
+			}
+		};
+
+		node.setOnMouseEntered(mouseEnteredEventHandler);
+		node.setOnMouseExited(mouseExiteEventHandler);
 	}
 
 	public static void playAudio(String audioFileName) {
@@ -129,6 +147,7 @@ public class UIHandler {
 
 		if ((message != null) && (!message.isBlank())) {
 			TextArea textArea = new TextArea(message);
+
 			textArea.setEditable(false);
 			alert.getDialogPane().setExpandableContent(new ScrollPane(textArea));
 		}
@@ -157,8 +176,8 @@ public class UIHandler {
 		showAlert(AlertType.WARNING, owner, "Warning", message, "", hasAudio ? "UhOh.mp3" : "", hasAudio);
 	}
 
-	public static void showError(Window owner, String message) {
-		showAlert(AlertType.ERROR, owner, "Error", message, "", "Nope.mp3", true);
+	public static void showError(Window owner, String header, String message) {
+		showAlert(AlertType.ERROR, owner, "Error", header, message, "Nope.mp3", true);
 	}
 
 	public static void showFatalError(Window owner, String header, String message) {

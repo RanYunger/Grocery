@@ -45,9 +45,5 @@ public class RemoveProductCommand implements iCommand {
 			mementoStack.push(tempStack.pop());
 				
 		mainView.readAllProducts();	
-		
-		UIHandler.showSuccess(mainView.getStage(),
-				String.format("Product #%s removed successfuly!", removedProduct.getTextualID()),
-				true);
 	}
 }
