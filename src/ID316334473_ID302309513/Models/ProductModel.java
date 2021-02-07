@@ -115,13 +115,12 @@ public class ProductModel implements Comparable<ProductModel>, iByteable {
 		return compareTo(other, UIHandler.getSortOption());
 	}
 
-	public int compareTo(ProductModel other, int sortOption) {
+	private int compareTo(ProductModel other, int sortOption) {
 		if (sortOption == 2) // Insertion Order
 			return queueNumber - other.getQueueNumber();
 
-		int thisNumericID = Integer.parseInt(getTextualID()), otherNumericID = Integer.parseInt(other.getTextualID());
-
-		return sortOption == 1 ? thisNumericID - otherNumericID : otherNumericID - thisNumericID;
+		return sortOption == 1 ? getTextualID().compareTo(other.getTextualID())
+				: other.getTextualID().compareTo(getTextualID());
 	}
 
 	@Override

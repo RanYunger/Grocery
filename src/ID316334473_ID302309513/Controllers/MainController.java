@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import ID316334473_ID302309513.UIHandler;
 import ID316334473_ID302309513.Models.ProductModel;
+import ID316334473_ID302309513.Models.Commands.RemoveAllProductsCommand;
+import ID316334473_ID302309513.Models.Commands.RemoveProductCommand;
+import ID316334473_ID302309513.Models.Commands.UndoCommand;
 import ID316334473_ID302309513.Views.AddProductView;
 import ID316334473_ID302309513.Views.MainView;
 import javafx.event.ActionEvent;
@@ -40,31 +43,37 @@ public class MainController extends WindowController {
 		EventHandler<ActionEvent> removeLastProductButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				new UndoCommand().execute();
 			}
 		};
 		EventHandler<ActionEvent> removeSelectedProductButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				TableView<Map.Entry<String, ProductModel>> productsTableView = mainView.getProductsTableView();
-				ProductModel selectedProduct = productsTableView.getSelectionModel().getSelectedItem().getValue();
+				ProductModel selectedProduct = null;
 				Optional<ButtonType> userChoice = null;
 
-				if (selectedProduct != null) {
+				if (productsTableView.getSelectionModel().getSelectedIndex() == -1)
+					UIHandler.showError(mainView.getStage(), "Choose a product to remove");
+				else {
+					selectedProduct = productsTableView.getSelectionModel().getSelectedItem().getValue();
 					userChoice = UIHandler.showConfirmation(mainView.getStage(), "Nothing special here. GTF back up!");
-					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
-						mainView.removeProduct(selectedProduct);
-						UIHandler.showSuccess(mainView.getStage(),
-								String.format("Product #%s deleted successfuly!", selectedProduct.getTextualID()),
-								true);
-					}
+					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES))
+						new RemoveProductCommand(selectedProduct).execute();
 				}
 			}
 		};
 		EventHandler<ActionEvent> removeAllProductsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO: COMPLETE
+				Optional<ButtonType> userChoice = UIHandler.showConfirmation(mainView.getStage(),
+						"Nothing special here. GTF back up!");
+
+				if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
+					new RemoveAllProductsCommand().execute();
+					UIHandler.showFatalError(UIHandler.getMainView().getStage(), "Everything is gone!",
+							"NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!");
+				}
 			}
 		};
 		EventHandler<ActionEvent> notifyCustomersButtonEventHandler = new EventHandler<ActionEvent>() {

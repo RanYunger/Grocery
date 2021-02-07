@@ -4,6 +4,7 @@ import ID316334473_ID302309513.UIHandler;
 import ID316334473_ID302309513.ValidPatterns;
 import ID316334473_ID302309513.Models.CustomerModel;
 import ID316334473_ID302309513.Models.ProductModel;
+import ID316334473_ID302309513.Models.Commands.AddProductCommand;
 import ID316334473_ID302309513.Views.AddProductView;
 import ID316334473_ID302309513.Views.View;
 import javafx.event.ActionEvent;
@@ -71,8 +72,7 @@ public class AddProductController extends WindowController {
 					customer = new CustomerModel(customerName, phoneNumber, interestedCheckBox.isSelected());
 				}
 
-				UIHandler.getMainView()
-						.addProduct(new ProductModel(productID, productName, costPrice, sellingPrice, customer));
+				new AddProductCommand(new ProductModel(productID, productName, costPrice, sellingPrice, customer)).execute();
 				addProductView.close();
 				UIHandler.showSuccess(UIHandler.getMainView().getStage(), "A new product was added successfully!",
 						true);

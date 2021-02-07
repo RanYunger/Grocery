@@ -32,8 +32,22 @@ public class FileHandler implements Iterable<ProductModel> {
 
 		return false;
 	}
+	
+	public static long findProduct(String productID) {
+		long fileOffset = -1;
+		
+		try {
+			raf = new RandomAccessFile(PATH, "r");
+			fileOffset = seekProduct(productID);
+			raf.close();
+		} catch(Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		
+		return fileOffset;
+	}
 
-	public static long seekProduct(String productID) {
+	private static long seekProduct(String productID) {
 		byte[] buffer = new byte[2 + productID.length()];
 		long prevOffset = fileOffset;
 		String readProductID = null;
@@ -55,7 +69,7 @@ public class FileHandler implements Iterable<ProductModel> {
 				fileOffset++;
 			}
 			fileOffset = prevOffset;
-			
+
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
@@ -106,7 +120,7 @@ public class FileHandler implements Iterable<ProductModel> {
 				writingOffset = raf.length();
 				currentReadProduct = readProductFromFile();
 				while (currentReadProduct != null) {
-					if (productToWrite.compareTo(currentReadProduct, sortOption) > 0) // ID Ascending / Descending
+					if (productToWrite.compareTo(currentReadProduct) > 0) // ID Ascending / Descending
 					{
 						writingOffset = seekProduct(productToWrite.getTextualID());
 						break;

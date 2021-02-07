@@ -8,7 +8,7 @@ public enum ValidPatterns {
 	CUSTOMER_PHONE_NUMBER("^05[2-4][0-9]{7}$"),
 
 	// Product's ID must contain 4 digits
-	PRODUCT_ID("^[1-9][0-9]{3}$"),
+	PRODUCT_ID("^[A-Z]{3}[0-9]{3}$"),
 	
 	// Title capitalization rule - first word must always be capital
 	// following words must be capital too, unless they're short words (1-3 letters)

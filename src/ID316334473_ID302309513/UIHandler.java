@@ -161,8 +161,8 @@ public class UIHandler {
 		showAlert(AlertType.ERROR, owner, "Error", message, "", "Nope.mp3", true);
 	}
 
-	public static void showError(Window owner, String header, String message) {
-		showAlert(AlertType.ERROR, owner, "Error", header, message, "Nope.mp3", true);
+	public static void showFatalError(Window owner, String header, String message) {
+		showAlert(AlertType.ERROR, owner, "Error", header, message, "NOOOOOOOOOO.wav", true);
 	}
 
 	public static Optional<ButtonType> showConfirmation(Window owner, String message) {

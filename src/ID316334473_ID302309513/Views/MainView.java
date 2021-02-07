@@ -4,11 +4,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.TreeMap;
 
 import ID316334473_ID302309513.FileHandler;
 import ID316334473_ID302309513.UIHandler;
 import ID316334473_ID302309513.Models.CustomerModel;
+import ID316334473_ID302309513.Models.MementoModel;
 import ID316334473_ID302309513.Models.ProductModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,6 +41,7 @@ public class MainView extends WindowView {
 	private LinkedHashMap<String, ProductModel> allProductsUnsorted;
 	private ObservableMap<String, ProductModel> allProductsSorted;
 	private ObservableList<CustomerModel> allCustomers;
+	private Stack<MementoModel> mementoStack;
 	private TableView<Map.Entry<String, ProductModel>> productsTableView;
 	private TableView<CustomerModel> customersTableView;
 
@@ -63,7 +66,7 @@ public class MainView extends WindowView {
 		return notifyCustomersButton;
 	}
 
-	public LinkedHashMap<String, ProductModel> getAllProductsUnorted() {
+	public LinkedHashMap<String, ProductModel> getAllProductsUnsorted() {
 		return allProductsUnsorted;
 	}
 
@@ -73,6 +76,10 @@ public class MainView extends WindowView {
 
 	public ObservableList<CustomerModel> getAllCustomers() {
 		return allCustomers;
+	}
+
+	public Stack<MementoModel> getMementoStack() {
+		return mementoStack;
 	}
 
 	public TableView<Map.Entry<String, ProductModel>> getProductsTableView() {
@@ -91,6 +98,7 @@ public class MainView extends WindowView {
 	public MainView(Stage primaryStage) {
 		super(primaryStage);
 
+		mementoStack = new Stack<MementoModel>();
 		buildScene();
 		addEffects();
 
@@ -199,20 +207,16 @@ public class MainView extends WindowView {
 
 	public void readAllProducts() {
 		int sortOption = UIHandler.getSortOption();
+		TreeMap<String, ProductModel> sortedTreeMap = sortOption == 0 ? new TreeMap<String, ProductModel>()
+				: new TreeMap<String, ProductModel>(Collections.reverseOrder());
 		FileHandler fileHandler = new FileHandler();
 		Iterator<ProductModel> iterator = fileHandler.iterator();
 		ProductModel currentProduct = null;
 		CustomerModel currentCustomer = null;
 		int totalProfit = 0;
 
-		if (sortOption == 2)
-			allProductsUnsorted = new LinkedHashMap<String, ProductModel>();
-		else {
-			TreeMap<String, ProductModel> littleShitty = sortOption == 0 ? new TreeMap<String, ProductModel>()
-					: new TreeMap<String, ProductModel>(Collections.reverseOrder());
-
-			allProductsSorted = FXCollections.observableMap(littleShitty);
-		}
+		allProductsUnsorted = new LinkedHashMap<String, ProductModel>();
+		allProductsSorted = FXCollections.observableMap(sortedTreeMap);
 		allCustomers = FXCollections.observableArrayList();
 
 		while (iterator.hasNext()) {
@@ -231,33 +235,5 @@ public class MainView extends WindowView {
 				.observableArrayList(sortOption == 2 ? allProductsUnsorted.entrySet() : allProductsSorted.entrySet()));
 		customersTableView.setItems(allCustomers);
 		totalProfitTextField.setText("" + totalProfit);
-	}
-
-	public void writeAllProducts() {
-		// TODO: COMPLETE (might be unneccesary)
-	}
-
-	public void addProduct(ProductModel product) {
-		FileHandler.writeProductToFile(product, UIHandler.getSortOption());
-
-		readAllProducts();
-	}
-
-	public void removeProduct(ProductModel product) {
-		FileHandler fileHandler = new FileHandler();
-		Iterator<ProductModel> iterator = fileHandler.iterator();
-		int sortOption = UIHandler.getSortOption();
-		String productID = product.getTextualID();
-
-		// TODO: Fix (Check if raf open before seeking)
-		FileHandler.seekProduct(productID);
-		iterator.remove();
-		
-		if (sortOption == 2)
-			allProductsUnsorted.remove(productID);
-		else
-			allProductsSorted.remove(productID);
-
-		readAllProducts();
 	}
 }
