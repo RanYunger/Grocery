@@ -227,7 +227,7 @@ public class MainView extends WindowView {
 			else
 				allProductsSorted.put(currentProduct.getTextualID(), currentProduct);
 			currentCustomer = currentProduct.getCustomer();
-			if (currentCustomer != null)
+			if ((currentCustomer != null) && (!allCustomers.contains(currentCustomer)))
 				allCustomers.add(currentCustomer);
 		}
 

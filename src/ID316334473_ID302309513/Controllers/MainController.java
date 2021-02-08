@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class MainController extends WindowController {
@@ -32,6 +33,7 @@ public class MainController extends WindowController {
 		super(view);
 
 		MainView mainView = getMainView();
+		Stage stage = mainView.getStage();
 
 		EventHandler<ActionEvent> addProductButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
@@ -56,16 +58,16 @@ public class MainController extends WindowController {
 				Optional<ButtonType> userChoice = null;
 
 				if ((mainView.getAllProductsSorted().isEmpty()) && (mainView.getAllProductsUnsorted().isEmpty()))
-					UIHandler.showError(mainView.getStage(), "No Products to remove", "");
+					UIHandler.showError(stage, "No Products to remove", "");
 				else if (productsTableView.getSelectionModel().getSelectedIndex() == -1)
-					UIHandler.showError(mainView.getStage(), "Choose a product to remove", "");
+					UIHandler.showError(stage, "Choose a product to remove", "");
 				else {
 					selectedProduct = productsTableView.getSelectionModel().getSelectedItem().getValue();
-					userChoice = UIHandler.showConfirmation(mainView.getStage(),
+					userChoice = UIHandler.showConfirmation(stage, "Are you sure?",
 							"\"Look, Ran, another one fell for that...\" (¬_¬)ﾉ( ^_^)／");
 					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
 						new RemoveProductCommand(selectedProduct).execute();
-						UIHandler.showSuccess(mainView.getStage(),
+						UIHandler.showSuccess(stage,
 								String.format("Product #%s removed successfuly!", selectedProduct.getTextualID()),
 								true);
 					}
@@ -78,9 +80,9 @@ public class MainController extends WindowController {
 				Optional<ButtonType> userChoice = null;
 
 				if ((mainView.getAllProductsSorted().isEmpty()) && (mainView.getAllProductsUnsorted().isEmpty()))
-					UIHandler.showError(mainView.getStage(), "No Products to remove", "");
+					UIHandler.showError(stage, "No Products to remove", "");
 				else {
-					userChoice = UIHandler.showConfirmation(mainView.getStage(),
+					userChoice = UIHandler.showConfirmation(stage, "Are you sure?",
 							"\"Look, Ran, another one fell for that...\" (¬_¬)ﾉ( ^_^)／");
 					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
 						new RemoveAllProductsCommand().execute();
@@ -119,7 +121,7 @@ public class MainController extends WindowController {
 			@Override
 			public void handle(ActionEvent event) {
 				if (mainView.getAllCustomers().isEmpty()) {
-					UIHandler.showError(mainView.getStage(), "No customers to notify", "");
+					UIHandler.showError(stage, "No customers to notify", "");
 					return;
 				}
 
@@ -135,15 +137,28 @@ public class MainController extends WindowController {
 
 			@Override
 			public void handle(WindowEvent event) {
-				Optional<ButtonType> userChoice = UIHandler.showConfirmation(mainView.getStage(),
-						"(ಥ_ʖಥ)(ಥ_ʖಥ) \"Please don't go! stay with us! Didn't you have fun?\"");
+				Optional<ButtonType> userChoice = UIHandler.showConfirmation(stage, "Leaving so soon?",
+						"(ʘᗩʘ’)(ʘᗩʘ’) \"Why? There's so much more for you to see...\"");
 
-				try {
+				if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
+					userChoice = UIHandler.showConfirmation(stage, "Do you really want to leave?",
+							"(︶︹︺)(︶︹︺) \"But... all the easter eggs we've planted! The dinasours!\"");
+
 					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
-						UIHandler.playAudio("ThankYouComeAgain.wav"); // TODO: INCREASE VOLUME
+						userChoice = UIHandler.showConfirmation(stage, "Nothing we can do to make you stay?",
+								"(ಥ﹏ಥ)(ಥ﹏ಥ) \"All we tried to do is make you laugh. Have you no soul?\"");
+						if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES))
+							UIHandler.showSuccess(stage,
+									"(ಥ _ʖಥ)ᕕ(ಥʖ̯ಥ) ᕗ \"Fine! Go then! Clearly you have no respect towards the effort of others!\"",
+									false);
+
+						try {
+							Thread.sleep(3000);
+						} catch (Exception ex) {
+						}
 					}
-				} catch (Exception ex) {
-				}
+				} else
+					event.consume();
 			}
 		};
 
@@ -152,8 +167,8 @@ public class MainController extends WindowController {
 		mainView.getRemoveSelectedProductButton().setOnAction(removeSelectedProductButtonEventHandler);
 		mainView.getRemoveAllProductsButton().setOnAction(removeAllProductsButtonEventHandler);
 		mainView.getNotifyCustomersButton().setOnAction(notifyCustomersButtonEventHandler);
-		mainView.getStage().setOnCloseRequest(viewCloseEventHandler);
+		stage.setOnCloseRequest(viewCloseEventHandler);
 	}
 
-	// Methods
+// Methods
 }

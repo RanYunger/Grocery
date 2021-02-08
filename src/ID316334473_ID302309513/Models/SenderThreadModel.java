@@ -29,7 +29,9 @@ public class SenderThreadModel extends Thread implements iSend, iRecieve {
 
 	// Constructors
 	private SenderThreadModel() {
-		setRecipients(UIHandler.getMainView().getAllCustomers());
+		ObservableList<CustomerModel> allCustomers = UIHandler.getMainView().getAllCustomers();
+		
+		setRecipients(allCustomers.filtered(c -> c.isInterestedInUpdates()));
 	}
 
 	// Methods

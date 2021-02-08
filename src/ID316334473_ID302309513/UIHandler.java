@@ -153,6 +153,7 @@ public class UIHandler {
 		}
 
 		if (alertType == AlertType.CONFIRMATION) {
+			alert.getDialogPane().setExpanded(true);
 			alert.getButtonTypes().clear();
 			alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 		}
@@ -184,9 +185,8 @@ public class UIHandler {
 		showAlert(AlertType.ERROR, owner, "Error", header, message, "Nope.mp3", true);
 	}
 
-	public static Optional<ButtonType> showConfirmation(Window owner, String message) {
-		return showAlert(AlertType.CONFIRMATION, owner, "Confirmation", "Are You Sure?", message, "AreYouSure.wav",
-				true);
+	public static Optional<ButtonType> showConfirmation(Window owner, String header, String message) {
+		return showAlert(AlertType.CONFIRMATION, owner, "Confirmation", header, message, "AreYouSure.wav", true);
 	}
 
 	public static void setGeneralFeatures(Stage stage) {
