@@ -66,7 +66,7 @@ public class EntryView extends WindowView {
 		enterButton = new Button("Enter");
 
 		hBox.setAlignment(Pos.CENTER);
-		vBox.setAlignment(Pos.CENTER);
+		vBox.setAlignment(Pos.CENTER_LEFT);
 		instructionsLabel.setFont(new Font(viewFontSize));
 		instructionsLabel.setTextFill(Color.BLACK);
 		ascendingIDRadioButton.setSelected(true);

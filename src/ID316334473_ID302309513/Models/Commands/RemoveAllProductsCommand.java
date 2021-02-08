@@ -10,9 +10,14 @@ public class RemoveAllProductsCommand implements iCommand {
 	// Fields
 	private RemoveProductCommand removeCurrentProductCommand;
 
+	// Properties (Getters and Setters)
+	private void setRemoveProductCommand(RemoveProductCommand command) {
+		this.removeCurrentProductCommand = command;
+	}
+
 	// Constructors
 	public RemoveAllProductsCommand() {
-		removeCurrentProductCommand = null;
+		setRemoveProductCommand(null);
 	}
 
 	// Methods
@@ -21,7 +26,7 @@ public class RemoveAllProductsCommand implements iCommand {
 		TableView<Map.Entry<String, ProductModel>> productsTableView = UIHandler.getMainView().getProductsTableView();
 
 		for (Map.Entry<String, ProductModel> productEntry : productsTableView.getItems()) {
-			removeCurrentProductCommand = new RemoveProductCommand(productEntry.getValue());	
+			setRemoveProductCommand(new RemoveProductCommand(productEntry.getValue()));
 			removeCurrentProductCommand.execute();
 		}
 	}

@@ -3,9 +3,8 @@ package ID316334473_ID302309513.Models;
 import ID316334473_ID302309513.ByteConverter;
 import javafx.beans.property.SimpleStringProperty;
 
-public class CustomerModel implements iByteable, iSender, iReciever {
+public class CustomerModel implements iByteable, iSend, iRecieve {
 	// Constants
-	public static final int NO_PRICE = 0;
 
 	// Fields
 	private SimpleStringProperty name, phoneNumber;
@@ -81,15 +80,15 @@ public class CustomerModel implements iByteable, iSender, iReciever {
 	public int getLengthInBytes() {
 		return (4 + getTextualName().length()) + 10 + 1;
 	}
-	
+
 	@Override
-	public void sendMessage(iReciever reciever, String message) {
-		// TODO: COMPLETE
+	public void sendMessage(iRecieve reciever, String message) {
+		reciever.receiveMessage(this, message);
 	}
-	
+
 	@Override
-	public void receiveMessage(iSender sender, String message) {
-		// TODO: COMPLETE
+	public void receiveMessage(iSend sender, String message) {
+		sendMessage(SenderThreadModel.getInstance(), getTextualName() + " approved");
 	}
 
 	@Override

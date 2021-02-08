@@ -27,23 +27,21 @@ public class FileHandler implements Iterable<ProductModel> {
 			if (!file.createNewFile())
 				return file.length() > 0;
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
 		}
 
 		return false;
 	}
-	
+
 	public static long findProduct(String productID) {
 		long fileOffset = -1;
-		
+
 		try {
 			raf = new RandomAccessFile(PATH, "r");
 			fileOffset = seekProduct(productID);
 			raf.close();
-		} catch(Exception ex) {
-			System.out.println(ex.getMessage());
+		} catch (Exception ex) {
 		}
-		
+
 		return fileOffset;
 	}
 
@@ -71,7 +69,6 @@ public class FileHandler implements Iterable<ProductModel> {
 			fileOffset = prevOffset;
 
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
 		}
 
 		return -1;
@@ -92,7 +89,6 @@ public class FileHandler implements Iterable<ProductModel> {
 
 			return ByteConverter.toProduct(productBytes);
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
 		}
 
 		return null;
@@ -140,7 +136,6 @@ public class FileHandler implements Iterable<ProductModel> {
 			raf.close();
 
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
 		}
 	}
 
@@ -166,7 +161,6 @@ public class FileHandler implements Iterable<ProductModel> {
 
 				return hasNext;
 			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
 			}
 
 			return false;
@@ -187,7 +181,6 @@ public class FileHandler implements Iterable<ProductModel> {
 				return readProduct;
 
 			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
 			}
 
 			return null;
@@ -219,7 +212,6 @@ public class FileHandler implements Iterable<ProductModel> {
 
 				raf.close();
 			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
 			}
 		}
 	}

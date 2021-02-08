@@ -1,22 +1,30 @@
 package ID316334473_ID302309513.Models.Commands;
 
-import ID316334473_ID302309513.Models.CustomerModel;
 import ID316334473_ID302309513.Views.NotifyCustomersView;
 
 public class NotifyCustomerCommand implements iCommand {
 	// Fields
 	private NotifyCustomersView notifyCustomersView;
-	private CustomerModel recipient;
-	
-	// Constructors
-	public NotifyCustomerCommand(NotifyCustomersView notifyCustomersView, CustomerModel recipient) {
+	private String message;
+
+	// Properties (Getters and Setters)
+	private void SetNotifyCustomersView(NotifyCustomersView notifyCustomersView) {
 		this.notifyCustomersView = notifyCustomersView;
-		this.recipient = recipient;
 	}
-	
+
+	private void setMessage(String message) {
+		this.message = message;
+	}
+
+	// Constructors
+	public NotifyCustomerCommand(NotifyCustomersView notifyCustomersView, String message) {
+		SetNotifyCustomersView(notifyCustomersView);
+		setMessage(message);
+	}
+
 	// Methods
 	@Override
-	public void execute() {	
-		notifyCustomersView.notifyCustomer(recipient.getTextualName());
+	public void execute() {
+		notifyCustomersView.addToLog(message);
 	}
 }

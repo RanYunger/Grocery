@@ -24,7 +24,7 @@ public class NotifyCustomersView extends WindowView {
 	private VBox vBox;
 	private TextArea logTextArea;
 	private Button finishButton;
-	private ImageView pingImageView;
+	private ImageView bellImageView;
 
 	// Properties (Getters and Setters)
 	public TextArea getLogTextArea() {
@@ -35,8 +35,8 @@ public class NotifyCustomersView extends WindowView {
 		return finishButton;
 	}
 
-	public SenderThreadModel getSenderThread() {
-		return SenderThreadModel.getInstance();
+	public ImageView getBellImageView() {
+		return bellImageView;
 	}
 
 	// Constructors
@@ -45,7 +45,7 @@ public class NotifyCustomersView extends WindowView {
 
 		buildScene();
 		addEffects();
-		
+
 		startSenderThread();
 	}
 
@@ -58,16 +58,16 @@ public class NotifyCustomersView extends WindowView {
 		vBox = new VBox();
 		logTextArea = new TextArea();
 		finishButton = new Button("Finish");
-		pingImageView = UIHandler.buildImage("Ping.png", sceneHeight * 0.7, sceneWidth / 2);
+		bellImageView = UIHandler.buildImage("Bell.png", 300, 300);
 
 		gridPane.getRowConstraints().add(new RowConstraints());
 		gridPane.getRowConstraints().get(0).setPercentHeight(100);
-		
+
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
 		gridPane.getColumnConstraints().get(0).setPercentWidth(50);
 		gridPane.getColumnConstraints().add(new ColumnConstraints());
 		gridPane.getColumnConstraints().get(1).setPercentWidth(50);
-		
+
 		vBox.setAlignment(Pos.CENTER);
 		logTextArea.setEditable(false);
 		logTextArea.setMinHeight(300);
@@ -75,15 +75,15 @@ public class NotifyCustomersView extends WindowView {
 		finishButton.setFont(new Font(viewFontSize));
 
 		vBox.getChildren().addAll(logTextArea, finishButton);
-		VBox.setMargin(logTextArea, new Insets(20, 20, 5, 20));
-		VBox.setMargin(finishButton, new Insets(5, 20, 10, 20));
+		VBox.setMargin(logTextArea, new Insets(10, 30, 0, 50));
+		VBox.setMargin(finishButton, new Insets(10, 50, 0, 50));
 
 		gridPane.add(vBox, 0, 0);
-		gridPane.add(pingImageView, 1, 0);
-		
-		stage.setScene(
-				new Scene(UIHandler.buildBackground("Grocery.jpg", gridPane, sceneWidth, sceneHeight, backgroundFontSize),
-						sceneWidth, sceneHeight));
+		gridPane.add(bellImageView, 1, 0);
+
+		stage.setScene(new Scene(
+				UIHandler.buildBackground("Grocery.jpg", gridPane, sceneWidth, sceneHeight, backgroundFontSize),
+				sceneWidth, sceneHeight));
 		UIHandler.setGeneralFeatures(stage);
 
 		stage.show();
@@ -92,6 +92,8 @@ public class NotifyCustomersView extends WindowView {
 	@Override
 	protected void addEffects() {
 		super.addEffects();
+		
+		UIHandler.addCursorEffectsToNode(bellImageView);
 	}
 
 	@Override
@@ -99,12 +101,10 @@ public class NotifyCustomersView extends WindowView {
 		return (Node) gridPane;
 	}
 
-	public void notifyCustomer(String customerName) {
+	public void addToLog(String message) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-		String message = String.format("[%s] %s recieved a notification.", LocalTime.now().format(formatter),
-				customerName);
 
-		logTextArea.appendText(message + "\n");
+		logTextArea.appendText(String.format("[%s] %s\n", LocalTime.now().format(formatter), message));
 		UIHandler.playAudio("Whatsapp.wav");
 	}
 

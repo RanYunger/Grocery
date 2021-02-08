@@ -13,9 +13,14 @@ public class RemoveProductCommand implements iCommand {
 	// Fields
 	private ProductModel removedProduct;
 
+	// Properties (Getters and Setters)
+	private void setRemovedProduct(ProductModel productToRemove) {
+		this.removedProduct = productToRemove;
+	}
+
 	// Constructors
 	public RemoveProductCommand(ProductModel productToRemove) {
-		this.removedProduct = productToRemove;
+		setRemovedProduct(productToRemove);
 	}
 
 	// Methods
@@ -43,7 +48,7 @@ public class RemoveProductCommand implements iCommand {
 		mementoStack.clear();
 		while (!tempStack.isEmpty())
 			mementoStack.push(tempStack.pop());
-				
-		mainView.readAllProducts();	
+
+		mainView.readAllProducts();
 	}
 }

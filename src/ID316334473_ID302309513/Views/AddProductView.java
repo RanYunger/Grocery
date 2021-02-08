@@ -155,23 +155,23 @@ public class AddProductView extends WindowView {
 
 		productIDHBox.getChildren().addAll(productIDLabel, productIDTextField);
 		HBox.setMargin(productIDLabel, new Insets(0, 0, 0, 10));
-		HBox.setMargin(productIDTextField, new Insets(0, 10, 0, 110));
+		HBox.setMargin(productIDTextField, new Insets(0, 10, 0, 108));
 
 		productNameHBox.getChildren().addAll(productNameLabel, productNameTextField);
 		HBox.setMargin(productNameLabel, new Insets(0, 0, 0, 10));
-		HBox.setMargin(productNameTextField, new Insets(0, 10, 0, 80));
+		HBox.setMargin(productNameTextField, new Insets(0, 10, 0, 74));
 
 		costPriceHBox.getChildren().addAll(costPriceLabel, costPriceSpinner);
 		HBox.setMargin(costPriceLabel, new Insets(0, 0, 0, 10));
-		HBox.setMargin(costPriceSpinner, new Insets(0, 10, 0, 90));
+		HBox.setMargin(costPriceSpinner, new Insets(0, 10, 0, 88));
 
 		sellingPriceHBox.getChildren().addAll(sellingPriceLabel, sellingPriceSpinner);
 		HBox.setMargin(sellingPriceLabel, new Insets(0, 0, 0, 10));
-		HBox.setMargin(sellingPriceSpinner, new Insets(0, 10, 0, 70));
+		HBox.setMargin(sellingPriceSpinner, new Insets(0, 10, 0, 68));
 
 		customerNameHBox.getChildren().addAll(customerNameLabel, customerNameTextField);
 		HBox.setMargin(customerNameLabel, new Insets(0, 0, 0, 10));
-		HBox.setMargin(customerNameTextField, new Insets(0, 10, 0, 42));
+		HBox.setMargin(customerNameTextField, new Insets(0, 10, 0, 40));
 
 		phoneNumberHBox.getChildren().addAll(phoneNumberLabel, phoneNumberTextField);
 		HBox.setMargin(phoneNumberLabel, new Insets(0, 0, 0, 10));

@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
+import javafx.stage.WindowEvent;
 
 public class MainController extends WindowController {
 	// Constants
@@ -54,12 +55,14 @@ public class MainController extends WindowController {
 				ProductModel selectedProduct = null;
 				Optional<ButtonType> userChoice = null;
 
-				if (productsTableView.getSelectionModel().getSelectedIndex() == -1)
+				if ((mainView.getAllProductsSorted().isEmpty()) && (mainView.getAllProductsUnsorted().isEmpty()))
+					UIHandler.showError(mainView.getStage(), "No Products to remove", "");
+				else if (productsTableView.getSelectionModel().getSelectedIndex() == -1)
 					UIHandler.showError(mainView.getStage(), "Choose a product to remove", "");
 				else {
 					selectedProduct = productsTableView.getSelectionModel().getSelectedItem().getValue();
 					userChoice = UIHandler.showConfirmation(mainView.getStage(),
-							"Look, Ran, another idiot fell for that... (¬_¬)ﾉ( ^_^)／");
+							"\"Look, Ran, another one fell for that...\" (¬_¬)ﾉ( ^_^)／");
 					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
 						new RemoveProductCommand(selectedProduct).execute();
 						UIHandler.showSuccess(mainView.getStage(),
@@ -72,33 +75,43 @@ public class MainController extends WindowController {
 		EventHandler<ActionEvent> removeAllProductsButtonEventHandler = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Optional<ButtonType> userChoice = UIHandler.showConfirmation(mainView.getStage(),
-						"Look, Ran, another idiot fell for that... (¬_¬)ﾉ( ^_^)／");
+				Optional<ButtonType> userChoice = null;
 
-				if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
-					new RemoveAllProductsCommand().execute();
-					UIHandler.showFatalError(UIHandler.getMainView().getStage(), "Everything is gone!",
-							"─▄▀▀▀▀▄─█──█────▄▀▀█─▄▀▀▀▀▄─█▀▀▄\r\n" + "─█────█─█──█────█────█────█─█──█\r\n"
-									+ "─█────█─█▀▀█────█─▄▄─█────█─█──█\r\n" + "─▀▄▄▄▄▀─█──█────▀▄▄█─▀▄▄▄▄▀─█▄▄▀\r\n"
-									+ "\r\n" + "─────────▄██████▀▀▀▀▀▀▄\r\n" + "─────▄█████████▄───────▀▀▄▄\r\n"
-									+ "──▄█████████████───────────▀▀▄\r\n" + "▄██████████████─▄▀───▀▄─▀▄▄▄──▀▄\r\n"
-									+ "███████████████──▄▀─▀▄▄▄▄▄▄────█\r\n" + "█████████████████▀█──▄█▄▄▄──────█\r\n"
-									+ "███████████──█▀█──▀▄─█─█─█───────█\r\n"
-									+ "████████████████───▀█─▀██▄▄──────█\r\n"
-									+ "█████████████████──▄─▀█▄─────▄───█\r\n"
-									+ "█████████████████▀███▀▀─▀▄────█──█\r\n"
-									+ "████████████████──────────█──▄▀──█\r\n"
-									+ "████████████████▄▀▀▀▀▀▀▄──█──────█\r\n"
-									+ "████████████████▀▀▀▀▀▀▀▄──█──────█\r\n"
-									+ "▀████████████████▀▀▀▀▀▀──────────█\r\n" + "──███████████████▀▀─────█──────▄▀\r\n"
-									+ "──▀█████████████────────█────▄▀\r\n" + "────▀████████████▄───▄▄█▀─▄█▀\r\n"
-									+ "──────▀████████████▀▀▀──▄███\r\n" + "──────████████████████████─█\r\n"
-									+ "─────████████████████████──█\r\n" + "────████████████████████───█\r\n"
-									+ "────██████████████████─────█\r\n" + "────██████████████████─────█\r\n"
-									+ "────██████████████████─────█\r\n" + "────██████████████████─────█\r\n"
-									+ "────██████████████████▄▄▄▄▄█\r\n" + "\r\n"
-									+ "─────────────█─────█─█──█─█───█\r\n" + "─────────────█─────█─█──█─▀█─█▀\r\n"
-									+ "─────────────█─▄█▄─█─█▀▀█──▀█▀\r\n" + "─────────────██▀─▀██─█──█───█");
+				if ((mainView.getAllProductsSorted().isEmpty()) && (mainView.getAllProductsUnsorted().isEmpty()))
+					UIHandler.showError(mainView.getStage(), "No Products to remove", "");
+				else {
+					userChoice = UIHandler.showConfirmation(mainView.getStage(),
+							"\"Look, Ran, another one fell for that...\" (¬_¬)ﾉ( ^_^)／");
+					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
+						new RemoveAllProductsCommand().execute();
+						UIHandler.showRemoveAllProductSuccess(UIHandler.getMainView().getStage(),
+								"All products removed successfuly!",
+								"─▄▀▀▀▀▄─█──█────▄▀▀█─▄▀▀▀▀▄─█▀▀▄\r\n" + "─█────█─█──█────█────█────█─█──█\r\n"
+										+ "─█────█─█▀▀█────█─▄▄─█────█─█──█\r\n"
+										+ "─▀▄▄▄▄▀─█──█────▀▄▄█─▀▄▄▄▄▀─█▄▄▀\r\n" + "\r\n"
+										+ "─────────▄██████▀▀▀▀▀▀▄\r\n" + "─────▄█████████▄───────▀▀▄▄\r\n"
+										+ "──▄█████████████───────────▀▀▄\r\n" + "▄██████████████─▄▀───▀▄─▀▄▄▄──▀▄\r\n"
+										+ "███████████████──▄▀─▀▄▄▄▄▄▄────█\r\n"
+										+ "█████████████████▀█──▄█▄▄▄──────█\r\n"
+										+ "███████████──█▀█──▀▄─█─█─█───────█\r\n"
+										+ "████████████████───▀█─▀██▄▄──────█\r\n"
+										+ "█████████████████──▄─▀█▄─────▄───█\r\n"
+										+ "█████████████████▀███▀▀─▀▄────█──█\r\n"
+										+ "████████████████──────────█──▄▀──█\r\n"
+										+ "████████████████▄▀▀▀▀▀▀▄──█──────█\r\n"
+										+ "████████████████▀▀▀▀▀▀▀▄──█──────█\r\n"
+										+ "▀████████████████▀▀▀▀▀▀──────────█\r\n"
+										+ "──███████████████▀▀─────█──────▄▀\r\n"
+										+ "──▀█████████████────────█────▄▀\r\n" + "────▀████████████▄───▄▄█▀─▄█▀\r\n"
+										+ "──────▀████████████▀▀▀──▄███\r\n" + "──────████████████████████─█\r\n"
+										+ "─────████████████████████──█\r\n" + "────████████████████████───█\r\n"
+										+ "────██████████████████─────█\r\n" + "────██████████████████─────█\r\n"
+										+ "────██████████████████─────█\r\n" + "────██████████████████─────█\r\n"
+										+ "────██████████████████▄▄▄▄▄█\r\n" + "\r\n"
+										+ "─────────────█─────█─█──█─█───█\r\n" + "─────────────█─────█─█──█─▀█─█▀\r\n"
+										+ "─────────────█─▄█▄─█─█▀▀█──▀█▀\r\n" + "─────────────██▀─▀██─█──█───█");
+					} else
+						UIHandler.playAudio("Chicken.mp3");
 				}
 			}
 		};
@@ -118,13 +131,28 @@ public class MainController extends WindowController {
 				notifyCustomersController.addEventHandlersToGeneralButtons();
 			}
 		};
+		EventHandler<WindowEvent> viewCloseEventHandler = new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent event) {
+				Optional<ButtonType> userChoice = UIHandler.showConfirmation(mainView.getStage(),
+						"(ಥ_ʖಥ)(ಥ_ʖಥ) \"Please don't go! stay with us! Didn't you have fun?\"");
+
+				try {
+					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
+						UIHandler.playAudio("ThankYouComeAgain.wav"); // TODO: INCREASE VOLUME
+					}
+				} catch (Exception ex) {
+				}
+			}
+		};
 
 		mainView.getAddProductButton().setOnAction(addProductButtonEventHandler);
 		mainView.getRemoveLastProductButton().setOnAction(removeLastProductButtonEventHandler);
 		mainView.getRemoveSelectedProductButton().setOnAction(removeSelectedProductButtonEventHandler);
 		mainView.getRemoveAllProductsButton().setOnAction(removeAllProductsButtonEventHandler);
 		mainView.getNotifyCustomersButton().setOnAction(notifyCustomersButtonEventHandler);
-		// mainView.getStage().setOnCloseRequest(e -> mainView.writeAllProducts());
+		mainView.getStage().setOnCloseRequest(viewCloseEventHandler);
 	}
 
 	// Methods

@@ -172,16 +172,16 @@ public class UIHandler {
 		showAlert(AlertType.INFORMATION, owner, "Success", message, "", hasAudio ? "Alright.wav" : "", hasAudio);
 	}
 
+	public static void showRemoveAllProductSuccess(Window owner, String header, String message) {
+		showAlert(AlertType.INFORMATION, owner, "Success", header, message, "NOOOOOOOOOO.wav", true);
+	}
+
 	public static void showWarning(Window owner, String message, boolean hasAudio) {
 		showAlert(AlertType.WARNING, owner, "Warning", message, "", hasAudio ? "UhOh.mp3" : "", hasAudio);
 	}
 
 	public static void showError(Window owner, String header, String message) {
 		showAlert(AlertType.ERROR, owner, "Error", header, message, "Nope.mp3", true);
-	}
-
-	public static void showFatalError(Window owner, String header, String message) {
-		showAlert(AlertType.ERROR, owner, "Error", header, message, "NOOOOOOOOOO.wav", true);
 	}
 
 	public static Optional<ButtonType> showConfirmation(Window owner, String message) {

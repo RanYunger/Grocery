@@ -10,9 +10,14 @@ public class AddProductCommand implements iCommand {
 	// Fields
 	private ProductModel addedProduct;
 
+	// Properties (Getters and Setters)
+	private void SetAddedProduct(ProductModel productToAdd) {
+		this.addedProduct = productToAdd;
+	}
+
 	// Constructors
 	public AddProductCommand(ProductModel productToAdd) {
-		this.addedProduct = productToAdd;
+		SetAddedProduct(productToAdd);
 	}
 
 	// Methods
