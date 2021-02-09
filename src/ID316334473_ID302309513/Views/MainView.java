@@ -120,11 +120,11 @@ public class MainView extends WindowView {
 		customersLabel = new Label("Customers");
 		totalProfitLabel = new Label("Total Profit:");
 		totalProfitTextField = new TextField();
-		addProductButton = new Button("Add Product");
-		removeLastProductButton = new Button("Undo");
-		removeSelectedProductButton = new Button("Remove Selected Product");
-		removeAllProductsButton = new Button("Remove All Products");
-		notifyCustomersButton = new Button("Notify Customers");
+		addProductButton = new Button("Add Product", UIHandler.buildImage("Groceries.png", 20, 20));
+		removeLastProductButton = new Button("Undo", UIHandler.buildImage("Undo.png", 20, 20));
+		removeSelectedProductButton = new Button("Remove Product", UIHandler.buildImage("X.png", 20, 20));
+		removeAllProductsButton = new Button("Remove All Products", UIHandler.buildImage("X.png", 20, 20));
+		notifyCustomersButton = new Button("Notify Customers", UIHandler.buildImage("Bell.png", 20, 20));
 		productsTableView = UIHandler.buildProductsTableView();
 		customersTableView = UIHandler.buildCustomersTableView();
 
@@ -218,14 +218,18 @@ public class MainView extends WindowView {
 		allProductsUnsorted = new LinkedHashMap<String, ProductModel>();
 		allProductsSorted = FXCollections.observableMap(sortedTreeMap);
 		allCustomers = FXCollections.observableArrayList();
+		mementoStack.clear();
 
 		while (iterator.hasNext()) {
 			currentProduct = iterator.next();
+			mementoStack.push(new MementoModel(currentProduct));
 			totalProfit += currentProduct.getNumericProfit();
+
 			if (sortOption == 2)
 				allProductsUnsorted.put(currentProduct.getTextualID(), currentProduct);
 			else
 				allProductsSorted.put(currentProduct.getTextualID(), currentProduct);
+
 			currentCustomer = currentProduct.getCustomer();
 			if ((currentCustomer != null) && (!allCustomers.contains(currentCustomer)))
 				allCustomers.add(currentCustomer);

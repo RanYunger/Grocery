@@ -64,7 +64,7 @@ public class MainController extends WindowController {
 				else {
 					selectedProduct = productsTableView.getSelectionModel().getSelectedItem().getValue();
 					userChoice = UIHandler.showConfirmation(stage, "Are you sure?",
-							"\"Look, Ran, another one fell for that...\" (¬_¬)ﾉ( ^_^)／");
+							"\"We've been here for hours. I feel like an idiot\" (¬_¬)ﾉ( ^_^)／ \"Just shut up and wave\"");
 					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
 						new RemoveProductCommand(selectedProduct).execute();
 						UIHandler.showSuccess(stage,
@@ -83,7 +83,7 @@ public class MainController extends WindowController {
 					UIHandler.showError(stage, "No Products to remove", "");
 				else {
 					userChoice = UIHandler.showConfirmation(stage, "Are you sure?",
-							"\"Look, Ran, another one fell for that...\" (¬_¬)ﾉ( ^_^)／");
+							"\"He won't do it. No way.\" (¬‿¬)( ͡° ͜ʖ ͡°) \"C'mon, big hero, do it!\"");
 					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
 						new RemoveAllProductsCommand().execute();
 						UIHandler.showRemoveAllProductSuccess(UIHandler.getMainView().getStage(),
@@ -137,28 +137,31 @@ public class MainController extends WindowController {
 
 			@Override
 			public void handle(WindowEvent event) {
-				Optional<ButtonType> userChoice = UIHandler.showConfirmation(stage, "Leaving so soon?",
-						"(ʘᗩʘ’)(ʘᗩʘ’) \"Why? There's so much more for you to see...\"");
+				int i = 0;
+				String[] headers = new String[] { "Leaving so soon?", "Do you really want to leave?",
+						"Nothing we can do to make you stay?" };
+				String[] messages = new String[] { "(⊙０⊙)(⊙０⊙) \"Why? There's so much more for you to see...\"",
+						"(︶︹︺)(︶︹︺) \"But... all the easter eggs we've planted! The dinasours!\"",
+						"(ಥ﹏ಥ)(ಥ﹏ಥ) \"All we tried to do is make you laugh. Have you no soul?\"" };
+				Optional<ButtonType> userChoice = null;
 
-				if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
-					userChoice = UIHandler.showConfirmation(stage, "Do you really want to leave?",
-							"(︶︹︺)(︶︹︺) \"But... all the easter eggs we've planted! The dinasours!\"");
-
-					if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES)) {
-						userChoice = UIHandler.showConfirmation(stage, "Nothing we can do to make you stay?",
-								"(ಥ﹏ಥ)(ಥ﹏ಥ) \"All we tried to do is make you laugh. Have you no soul?\"");
-						if ((userChoice.isPresent()) && (userChoice.get() == ButtonType.YES))
-							UIHandler.showSuccess(stage,
-									"(ಥ _ʖಥ)ᕕ(ಥʖ̯ಥ) ᕗ \"Fine! Go then! Clearly you have no respect towards the effort of others!\"",
-									false);
-
-						try {
-							Thread.sleep(3000);
-						} catch (Exception ex) {
-						}
+				for (; i < headers.length; i++) {
+					userChoice = UIHandler.showConfirmation(stage, headers[i], messages[i]);
+					if ((userChoice.isPresent()) && (userChoice.get() != ButtonType.YES)) {
+						event.consume();
+						break;
 					}
-				} else
-					event.consume();
+				}
+
+				try {
+					if (i == headers.length) {
+						UIHandler.showSuccess(stage,
+								"(ಥ _ʖಥ)ᕕ(ಥʖ̯ಥ) ᕗ \"Fine! Go then! Clearly you have no respect towards the effort of others!\"",
+								false);
+						Thread.sleep(4000);
+					}
+				} catch (Exception ex) {
+				}
 			}
 		};
 

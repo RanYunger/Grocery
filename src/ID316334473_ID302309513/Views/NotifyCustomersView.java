@@ -57,7 +57,7 @@ public class NotifyCustomersView extends WindowView {
 		gridPane = new GridPane();
 		vBox = new VBox();
 		logTextArea = new TextArea();
-		finishButton = new Button("Finish");
+		finishButton = new Button("Finish", UIHandler.buildImage("Stop.png", 30, 30));
 		bellImageView = UIHandler.buildImage("Bell.png", 300, 300);
 
 		gridPane.getRowConstraints().add(new RowConstraints());
@@ -92,7 +92,8 @@ public class NotifyCustomersView extends WindowView {
 	@Override
 	protected void addEffects() {
 		super.addEffects();
-		
+
+		UIHandler.addCursorEffectsToNode(finishButton);
 		UIHandler.addCursorEffectsToNode(bellImageView);
 	}
 

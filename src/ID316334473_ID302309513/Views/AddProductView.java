@@ -110,7 +110,7 @@ public class AddProductView extends WindowView {
 		costPriceSpinner = new Spinner<Integer>(0, 100, 0, 1);
 		sellingPriceSpinner = new Spinner<Integer>(0, 100, 0, 1);
 		interestedCheckBox = new CheckBox();
-		submitButton = new Button("Submit");
+		submitButton = new Button("Submit" , UIHandler.buildImage("Add.png", 30, 30));
 		cartImageView = UIHandler.buildImage("Groceries.png", sceneHeight * 0.7, sceneWidth / 2);
 
 		gridPane.getRowConstraints().add(new RowConstraints());
@@ -145,7 +145,7 @@ public class AddProductView extends WindowView {
 		customerNameTextField.setMinWidth(200);
 		customerNameTextField.setTooltip(new Tooltip("Format: firstname surename (capitalized) (i.e. John Doe)"));
 		phoneNumberTextField.setMinWidth(200);
-		phoneNumberTextField.setTooltip(new Tooltip("Format: 10 digits (i.e. 0529182736"));
+		phoneNumberTextField.setTooltip(new Tooltip("Format: 10 digits (i.e. 0529182736)"));
 		costPriceSpinner.setMinWidth(200);
 		costPriceSpinner.editorProperty().get().setAlignment(Pos.CENTER);
 		sellingPriceSpinner.setMinWidth(200);
@@ -207,6 +207,8 @@ public class AddProductView extends WindowView {
 	@Override
 	protected void addEffects() {
 		super.addEffects();
+		
+		UIHandler.addCursorEffectsToNode(submitButton);
 	}
 
 	@Override

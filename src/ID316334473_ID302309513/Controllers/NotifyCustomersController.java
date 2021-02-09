@@ -33,7 +33,8 @@ public class NotifyCustomersController extends WindowController {
 			@Override
 			public void handle(ActionEvent event) {
 				SenderThreadModel.getInstance().interrupt();
-				UIHandler.showWarning(notifyCustomersView.getStage(), "Sending interrupted", true);
+				notifyCustomersView.getFinishButton().setDisable(true);
+				UIHandler.showWarning(notifyCustomersView.getStage(), "Pinging paused", true);
 			}
 		};
 		EventHandler<WindowEvent> viewCloseEventHandler = new EventHandler<WindowEvent>() {
