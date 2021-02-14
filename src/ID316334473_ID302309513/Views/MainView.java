@@ -121,7 +121,7 @@ public class MainView extends WindowView {
 		totalProfitLabel = new Label("Total Profit:");
 		totalProfitTextField = new TextField();
 		addProductButton = new Button("Add Product", UIHandler.buildImage("Groceries.png", 20, 20));
-		removeLastProductButton = new Button("Undo", UIHandler.buildImage("Undo.png", 20, 20));
+		removeLastProductButton = new Button("Undo Insert", UIHandler.buildImage("Undo.png", 20, 20));
 		removeSelectedProductButton = new Button("Remove Product", UIHandler.buildImage("X.png", 20, 20));
 		removeAllProductsButton = new Button("Remove All Products", UIHandler.buildImage("X.png", 20, 20));
 		notifyCustomersButton = new Button("Notify Customers", UIHandler.buildImage("Bell.png", 20, 20));

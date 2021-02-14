@@ -5,7 +5,7 @@ public enum ValidPatterns {
 	CUSTOMER_FULL_NAME("^[A-Z][a-z]+(?: [A-Z][a-z]+){1,}$"),
 	
 	// Customer's phone number consists of 3 dialing prefix digits and 7 digits
-	CUSTOMER_PHONE_NUMBER("^05[2-4][0-9]{7}$"),
+	CUSTOMER_PHONE_NUMBER("^05[0-5][0-9]{7}$"),
 
 	// Product's ID must contain 3 capital letters and 3 digits
 	PRODUCT_ID("^[A-Z]{3}[0-9]{3}$"),
